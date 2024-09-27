@@ -5,63 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Produção</title>
     <style>
-       body {
+        body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        .input-group {
-            margin-bottom: 10px;
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
         }
         label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="number"],
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
+            display: inline-block;
+            width: 150px;
             margin-bottom: 10px;
-            box-sizing: border-box;
+        }
+        select, input {
+            padding: 5px;
+            margin-bottom: 10px;
         }
         button {
-            padding: 10px 20px;
+            background-color: green;
             color: white;
+            padding: 10px;
             border: none;
             cursor: pointer;
-            margin-right: 5px;
+            font-size: 16px;
         }
-        .machine-btn {
-            width: 232px;
-            height: 72px;
-            margin-bottom: 20px;
-            font-size: 20px;
+        button:hover {
+            background-color: darkgreen;
         }
-        #btn-cl01 { background-color: #FF5733; }
-        #btn-cl02 { background-color: #33C1FF; }
-        #btn-cl03 { background-color: #33FF57; }
-        #btn-cl04 { background-color: #FFC300; }
-        .calc-btn {
-            background-color: #4CAF50;
-        }
-        .calc-btn:hover {
-            background-color: #45a049;
-        }
-        .result {
+        h2 {
             margin-top: 20px;
-            font-weight: bold;
+            color: #555;
         }
-        table {
-            margin-top: 20px;
-            width: 100%;
-            border-collapse: collapse;
+        p {
+            font-size: 18px;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+        .machine-buttons {
+            display: flex;
+            gap: 10px;
         }
-        th {
-            background-color: #f2f2f2;
+        .machine-buttons button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .machine-buttons button.active {
+            background-color: red;
+        }
+        .machine-buttons button.inactive {
+            background-color: green;
         }
     </style>
 </head>
@@ -69,21 +66,6 @@
     <h1>Controle de Produção</h1>
 
     <form id="productionForm">
-        <label for="machine">Nome da Máquina:</label>
-        <input type="text" id="machine" required><br>
-
-        <label for="opNumber">Número da OP:</label>
-        <input type="text" id="opNumber" required><br>
-
-        <label for="componentCode">Código do Componente:</label>
-        <input type="text" id="componentCode" required><br>
-
-        <label for="opQuantity">Quantidade da OP:</label>
-        <input type="number" id="opQuantity" required><br>
-
-        <label for="opLength">Comprimento da OP (m):</label>
-        <input type="number" id="opLength" required><br>
-
         <label for="fabricType">Tipo de Tecido:</label>
         <select id="fabricType" required>
             <option value="">Selecione</option>
@@ -92,13 +74,12 @@
             <option value="PET">PET</option>
         </select><br>
 
-        <label for="opWeight">Gramatura da OP (g/m²):</label>
+        <label for="opWeight">Gramatura da OP:</label>
         <input type="number" id="opWeight" required><br>
 
-        <label for="piecesRemoved">Quantidade de Peças Retiradas:</label>
-        <input type="number" id="piecesRemoved" required><br>
+        <label for="opLength">Comprimento da OP:</label>
+        <input type="number" id="opLength" required><br>
 
-        <button type="button" onclick="addRecord()">Adicionar Registro</button>
         <button type="button" onclick="calculateResults()">Calcular Resultados</button>
     </form>
 
@@ -107,114 +88,65 @@
     <p id="turnsResult">Número de Voltas: </p>
     <p id="cutAmountResult">Quantidade Cortada: </p>
 
-    <h2>Registros de Produção</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Data e Hora</th>
-                <th>Nome da Máquina</th>
-                <th>Número da OP</th>
-                <th>Código do Componente</th>
-                <th>Quantidade da OP</th>
-                <th>Comprimento da OP (m)</th>
-                <th>Tipo de Tecido</th>
-                <th>Gramatura da OP (g/m²)</th>
-                <th>Quantidade de Peças Retiradas</th>
-            </tr>
-        </thead>
-        <tbody id="productionTable">
-        </tbody>
-    </table>
-
-    <button type="button" onclick="downloadCSV()">Baixar CSV</button>
+    <h2>Máquinas</h2>
+    <div class="machine-buttons">
+        <button id="machine1" class="inactive" onclick="toggleMachine(1)">Máquina 1</button>
+        <button id="machine2" class="inactive" onclick="toggleMachine(2)">Máquina 2</button>
+        <button id="machine3" class="inactive" onclick="toggleMachine(3)">Máquina 3</button>
+    </div>
 
     <script>
-        let records = [];
+        const fabricType = document.getElementById('fabricType');
+        const opWeight = document.getElementById('opWeight');
+        const opLength = document.getElementById('opLength');
+        const cutsResult = document.getElementById('cutsResult');
+        const turnsResult = document.getElementById('turnsResult');
+        const cutAmountResult = document.getElementById('cutAmountResult');
 
-        function addRecord() {
-            const date = new Date().toLocaleString();
-            const machine = document.getElementById('machine').value;
-            const opNumber = document.getElementById('opNumber').value;
-            const componentCode = document.getElementById('componentCode').value;
-            const opQuantity = document.getElementById('opQuantity').value;
-            const opLength = document.getElementById('opLength').value;
-            const fabricType = document.getElementById('fabricType').value;
-            const opWeight = document.getElementById('opWeight').value;
-            const piecesRemoved = document.getElementById('piecesRemoved').value;
-
-            const record = {
-                date,
-                machine,
-                opNumber,
-                componentCode,
-                opQuantity,
-                opLength,
-                fabricType,
-                opWeight,
-                piecesRemoved
-            };
-
-            records.push(record);
-            updateTable();
-        }
-
-        function updateTable() {
-            const productionTable = document.getElementById('productionTable');
-            productionTable.innerHTML = '';
-            records.forEach(record => {
-                const row = document.createElement('tr');
-                for (const key in record) {
-                    const cell = document.createElement('td');
-                    cell.textContent = record[key];
-                    row.appendChild(cell);
-                }
-                productionTable.appendChild(row);
-            });
-            localStorage.setItem('productionRecords', JSON.stringify(records));
-        }
-
-        function downloadCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Data e Hora,Nome da Máquina,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP,Quantidade de Peças Retiradas\n";
-
-            records.forEach(record => {
-                csvContent += `${record.date},${record.machine},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.piecesRemoved}\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "production_records.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        fabricType.addEventListener('change', function() {
+            const selectedFabric = fabricType.value;
+            if (selectedFabric === 'Plano') {
+                opWeight.disabled = false;
+                opWeight.min = 65;
+                opWeight.max = 120;
+                opWeight.value = ''; // Limpar o valor anterior
+            } else if (selectedFabric === 'Tubular') {
+                opWeight.disabled = false;
+                opWeight.min = 65;
+                opWeight.max = 82;
+                opWeight.value = ''; // Limpar o valor anterior
+            } else if (selectedFabric === 'PET') {
+                opWeight.value = 170;
+                opWeight.disabled = true;
+            }
+        });
 
         function calculateResults() {
-            const fabricType = document.getElementById('fabricType').value;
-            const opWeight = parseFloat(document.getElementById('opWeight').value);
-            const opLength = parseFloat(document.getElementById('opLength').value);
+            const fabric = fabricType.value;
+            const weight = parseFloat(opWeight.value);
+            const length = parseFloat(opLength.value);
             const maxCarouselLength = 540;
 
             // Cálculo do Número de Cortes
-            const numCuts = Math.floor(maxCarouselLength / opLength);
-            document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
+            const numCuts = Math.floor(maxCarouselLength / length);
+            cutsResult.textContent = `Número de Cortes: ${numCuts}`;
 
             // Cálculo do Número de Voltas
             let numTurns = 0;
-            if (fabricType === 'Plano') {
-                numTurns = calculateTurnsPlano(opWeight);
-            } else if (fabricType === 'Tubular') {
-                numTurns = calculateTurnsTubular(opWeight);
-            } else if (fabricType === 'PET') {
+
+            if (fabric === 'Plano') {
+                numTurns = calculateTurnsPlano(weight);
+            } else if (fabric === 'Tubular') {
+                numTurns = calculateTurnsTubular(weight);
+            } else if (fabric === 'PET') {
                 numTurns = 25; // Valor fixo para PET
             }
 
-            document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+            turnsResult.textContent = `Número de Voltas: ${numTurns}`;
 
             // Cálculo da Quantidade Cortada
             const cutAmount = numCuts * numTurns;
-            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+            cutAmountResult.textContent = `Quantidade Cortada: ${cutAmount}`;
         }
 
         function calculateTurnsPlano(weight) {
@@ -239,15 +171,17 @@
             }
         }
 
-        function loadRecords() {
-            const savedRecords = localStorage.getItem('productionRecords');
-            if (savedRecords) {
-                records = JSON.parse(savedRecords);
-                updateTable();
+        // Função para alternar a cor e o estado do botão de cada máquina
+        function toggleMachine(machineNumber) {
+            const button = document.getElementById(`machine${machineNumber}`);
+            if (button.classList.contains('inactive')) {
+                button.classList.remove('inactive');
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+                button.classList.add('inactive');
             }
         }
-
-        window.onload = loadRecords;
     </script>
 </body>
 </html>
