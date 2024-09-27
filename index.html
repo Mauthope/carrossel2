@@ -4,13 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Produção</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: inline-block;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        input, select {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Controle de Produção</h1>
 
     <form id="productionForm">
-        <!-- Outros campos como antes -->
-
         <label for="fabricType">Tipo de Tecido:</label>
         <select id="fabricType" required>
             <option value="">Selecione</option>
@@ -22,11 +48,9 @@
         <label for="opWeight">Gramatura da OP:</label>
         <input type="number" id="opWeight" required><br>
 
-        <label for="opLength">Comprimento da OP:</label>
+        <label for="opLength">Comprimento da OP (cm):</label>
         <input type="number" id="opLength" required><br>
 
-        <!-- Outros campos como antes -->
-        
         <button type="button" onclick="calculateResults()">Calcular Resultados</button>
     </form>
 
@@ -43,29 +67,36 @@
         const turnsResult = document.getElementById('turnsResult');
         const cutAmountResult = document.getElementById('cutAmountResult');
 
+        // Ajusta gramatura de acordo com o tipo de tecido selecionado
         fabricType.addEventListener('change', function() {
             const selectedFabric = fabricType.value;
             if (selectedFabric === 'Plano') {
                 opWeight.disabled = false;
                 opWeight.min = 65;
                 opWeight.max = 120;
-                opWeight.value = ''; // Limpar o valor anterior
+                opWeight.value = ''; // Limpar valor anterior
             } else if (selectedFabric === 'Tubular') {
                 opWeight.disabled = false;
                 opWeight.min = 65;
                 opWeight.max = 82;
-                opWeight.value = ''; // Limpar o valor anterior
+                opWeight.value = ''; // Limpar valor anterior
             } else if (selectedFabric === 'PET') {
                 opWeight.value = 170;
                 opWeight.disabled = true;
             }
         });
 
+        // Função para calcular os resultados
         function calculateResults() {
             const fabric = fabricType.value;
             const weight = parseFloat(opWeight.value);
             const length = parseFloat(opLength.value);
             const maxCarouselLength = 540;
+
+            if (!fabric || isNaN(weight) || isNaN(length)) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
 
             // Cálculo do Número de Cortes
             const numCuts = Math.floor(maxCarouselLength / length);
@@ -89,24 +120,26 @@
             cutAmountResult.textContent = `Quantidade Cortada: ${cutAmount}`;
         }
 
+        // Função para calcular o número de voltas para tecido plano
         function calculateTurnsPlano(weight) {
             const baseWeight = 65;
             const baseTurns = 80;
             if (weight === baseWeight) {
                 return baseTurns;
             } else {
-                const difference = (weight - baseWeight) * 8 / (92 - 80);
+                const difference = (weight - baseWeight) * (80 - 72) / (75 - 65);
                 return baseTurns - difference;
             }
         }
 
+        // Função para calcular o número de voltas para tecido tubular
         function calculateTurnsTubular(weight) {
             const baseWeight = 65;
             const baseTurns = 45;
             if (weight === baseWeight) {
                 return baseTurns;
             } else {
-                const difference = (weight - baseWeight) * 8 / (92 - 80);
+                const difference = (weight - baseWeight) * (45 - 40) / (75 - 65);
                 return baseTurns - difference;
             }
         }
