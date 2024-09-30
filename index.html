@@ -223,19 +223,19 @@
             const cutAmount = numCuts * numTurns;
             document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
-            // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = cutAmount + piecesRemoved;
-            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
-
             // Cálculo do Número de Ciclos (mantendo a fórmula original)
             const numCycles = opQuantity / cutAmount; // Fórmula original
-            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles.toFixed(3)}`;
+            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
             // Cálculo do Restante de Voltas para Fechar a OP
             const fractionalPart = numCycles - Math.floor(numCycles); // Parte decimal
             const additionalCuts = Math.ceil(fractionalPart * cutAmount);
             const remainingTurns = Math.ceil((additionalCuts * numTurns) / cutAmount);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+
+            // Cálculo da Quantidade Total Cortada
+            const totalCutAmount = ((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts);
+            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
             const activeMachines = getActiveMachinesCount();
             const record = {
