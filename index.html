@@ -132,6 +132,7 @@
     <p id="cutAmountResult">Quantidade Cortada: </p>
     <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
     <p id="cyclesResult">Número de Ciclos: </p>
+    <p id="additionalTurnsResult">Número de Voltas Restantes: </p>
 
     <table id="recordsTable">
         <thead>
@@ -228,8 +229,13 @@
             document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
             // Cálculo do Número de Ciclos
-            const numCycles = opQuantity / cutAmount;
-            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
+            const numCycles = cutAmount / opQuantity;
+            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles.toFixed(2)}`;
+
+            // Cálculo das Voltas Restantes (Regra de Três)
+            const fractionalCycles = numCycles % 1;  // Parte decimal
+            const additionalTurns = Math.ceil(fractionalCycles * numTurns);
+            document.getElementById('additionalTurnsResult').textContent = `Número de Voltas Restantes: ${additionalTurns}`;
 
             const record = {
                 timestamp: new Date().toLocaleString(),
