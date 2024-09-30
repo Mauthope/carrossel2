@@ -221,8 +221,8 @@
             document.getElementById('turnsResult').textContent = `Número de Voltas: ${Math.ceil(numTurns)}`;
 
             // Cálculo da Quantidade Cortada
-            const cutAmount = numCuts * numTurns;
-            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+            const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
+    document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
             // Cálculo do Número de Ciclos (mantendo a fórmula original)
             const numCycles = opQuantity / cutAmount; // Fórmula original
@@ -235,8 +235,8 @@
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
             // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = ((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts);
-            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
+            const totalCutAmount = Math.floor((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts); // Arredondando para menor
+    document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
             const activeMachines = getActiveMachinesCount();
             const record = {
