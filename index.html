@@ -228,95 +228,76 @@
             document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
             // Cálculo do Restante de Voltas para Fechar a OP
-            const fractionalPart = numCycles - Math.floor(numCycles); // Parte decimal
-            const additionalCuts = Math.ceil(fractionalPart * cutAmount);
-            const remainingTurns = Math.ceil((additionalCuts * numTurns) / cutAmount);
+            const fractionalPart = numCycles - Math.floor(numCycles);
+            const remainingTurns = Math.ceil(fractionalPart * cutAmount);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
-            // Salvar registro
-            saveRecord(opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved);
-        }
-
-        function calculateTurnsPlano(weight) {
-            if (weight <= 30) return 15;
-            if (weight <= 80) return 10;
-            return 5;
-        }
-
-        function calculateTurnsTubular(weight) {
-            if (weight <= 25) return 20;
-            if (weight <= 70) return 15;
-            return 10;
-        }
-
-        function saveRecord(opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved) {
-            const activeMachines = Array.from(document.getElementsByClassName('machine-btn'))
-                .filter(button => button.classList.contains('active'))
-                .map(button => button.innerText)
-                .join(', ');
-
-            const now = new Date();
+            // Adicionando dados à tabela
+            const activeMachines = getActiveMachinesCount();
             const record = {
-                dateTime: now.toLocaleString(),
-                activeMachines,
-                opNumber,
-                componentCode,
-                opQuantity,
-                opLength,
-                fabricType,
-                opWeight,
-                piecesRemoved
+                dateTime: new Date().toLocaleString(),
+                activeMachines: activeMachines,
+                opNumber: opNumber,
+                componentCode: componentCode,
+                opQuantity: opQuantity,
+                opLength: opLength,
+                fabricType: fabricType,
+                opWeight: opWeight,
+                piecesRemoved: piecesRemoved,
             };
             records.push(record);
             updateRecordsTable();
+
+            // Limpar formulário
+            document.getElementById('productionForm').reset();
+            resetMachineButtons();
+        }
+
+        function calculateTurnsPlano(weight) {
+            return Math.ceil(weight / 10); // Ajustar a lógica conforme necessário
+        }
+
+        function calculateTurnsTubular(weight) {
+            return Math.ceil(weight / 20); // Ajustar a lógica conforme necessário
         }
 
         function updateRecordsTable() {
-            const tbody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = ''; // Limpa a tabela antes de atualizar
-
+            const tbody = document.querySelector('#recordsTable tbody');
+            tbody.innerHTML = '';
             records.forEach(record => {
-                const row = tbody.insertRow();
-                row.insertCell(0).textContent = record.dateTime;
-                row.insertCell(1).textContent = record.activeMachines;
-                row.insertCell(2).textContent = record.opNumber;
-                row.insertCell(3).textContent = record.componentCode;
-                row.insertCell(4).textContent = record.opQuantity;
-                row.insertCell(5).textContent = record.opLength;
-                row.insertCell(6).textContent = record.fabricType;
-                row.insertCell(7).textContent = record.opWeight;
-                row.insertCell(8).textContent = record.piecesRemoved;
+                const row = `<tr>
+                    <td>${record.dateTime}</td>
+                    <td>${record.activeMachines}</td>
+                    <td>${record.opNumber}</td>
+                    <td>${record.componentCode}</td>
+                    <td>${record.opQuantity}</td>
+                    <td>${record.opLength}</td>
+                    <td>${record.fabricType}</td>
+                    <td>${record.opWeight}</td>
+                    <td>${record.piecesRemoved}</td>
+                </tr>`;
+                tbody.innerHTML += row;
             });
         }
 
+        function resetMachineButtons() {
+            const machineButtons = document.getElementsByClassName('machine-btn');
+            for (let button of machineButtons) {
+                button.classList.remove('active');
+                button.classList.add('inactive');
+            }
+        }
+
         function downloadCSV() {
-            const csvRows = [];
-            const headers = ['Data e Hora', 'Máquinas Ativas', 'Número da OP', 'Código do Componente', 'Quantidade da OP', 'Comprimento da OP', 'Tipo de Tecido', 'Gramatura da OP', 'Quantidade de Peças Retiradas'];
-            csvRows.push(headers.join(','));
-
-            records.forEach(record => {
-                const row = [
-                    record.dateTime,
-                    record.activeMachines,
-                    record.opNumber,
-                    record.componentCode,
-                    record.opQuantity,
-                    record.opLength,
-                    record.fabricType,
-                    record.opWeight,
-                    record.piecesRemoved
-                ];
-                csvRows.push(row.join(','));
-            });
-
-            const csvString = csvRows.join('\n');
-            const blob = new Blob([csvString], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'records.csv');
-            a.click();
-            URL.revokeObjectURL(url);
+            const csvContent = "data:text/csv;charset=utf-8,"
+                + records.map(record => Object.values(record).join(",")).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "productions.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
