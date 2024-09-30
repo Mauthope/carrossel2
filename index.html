@@ -207,7 +207,15 @@
             document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
 
             // Cálculo do Número de Voltas
-            let numTurns = calculateTurns(fabricType, opWeight);
+            let numTurns = 0;
+
+            if (fabricType === 'Plano') {
+                numTurns = calculateTurnsPlano(opWeight);
+            } else if (fabricType === 'Tubular') {
+                numTurns = calculateTurnsTubular(opWeight);
+            } else if (fabricType === 'PET') {
+                numTurns = 25; // Valor fixo para PET
+            }
 
             document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
 
@@ -225,99 +233,90 @@
             const remainingTurns = Math.ceil((additionalCuts * numTurns) / cutAmount);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
-            // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = ((numTurns * Math.floor(numCuts)) + piecesRemoved);
-            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
+            // Salvar registro
+            saveRecord(opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved);
+        }
 
-            // Registro dos dados
-            const dateTime = new Date().toLocaleString();
-            const activeMachines = getActiveMachinesCount();
-            records.push({ dateTime, activeMachines, opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved });
+        function calculateTurnsPlano(weight) {
+            if (weight <= 30) return 15;
+            if (weight <= 80) return 10;
+            return 5;
+        }
+
+        function calculateTurnsTubular(weight) {
+            if (weight <= 25) return 20;
+            if (weight <= 70) return 15;
+            return 10;
+        }
+
+        function saveRecord(opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved) {
+            const activeMachines = Array.from(document.getElementsByClassName('machine-btn'))
+                .filter(button => button.classList.contains('active'))
+                .map(button => button.innerText)
+                .join(', ');
+
+            const now = new Date();
+            const record = {
+                dateTime: now.toLocaleString(),
+                activeMachines,
+                opNumber,
+                componentCode,
+                opQuantity,
+                opLength,
+                fabricType,
+                opWeight,
+                piecesRemoved
+            };
+            records.push(record);
             updateRecordsTable();
         }
 
-        function calculateTurns(fabricType, opWeight) {
-            let turns = 0;
-            switch (fabricType) {
-                case 'Plano':
-                    if (opWeight <= 100) {
-                        turns = 2;
-                    } else if (opWeight > 100 && opWeight <= 200) {
-                        turns = 3;
-                    } else if (opWeight > 200 && opWeight <= 300) {
-                        turns = 4;
-                    } else if (opWeight > 300 && opWeight <= 400) {
-                        turns = 5;
-                    } else {
-                        turns = 6; // Para gramaturas acima de 400g
-                    }
-                    break;
-                case 'Tubular':
-                    if (opWeight <= 100) {
-                        turns = 3;
-                    } else if (opWeight > 100 && opWeight <= 200) {
-                        turns = 4;
-                    } else if (opWeight > 200 && opWeight <= 300) {
-                        turns = 5;
-                    } else if (opWeight > 300 && opWeight <= 400) {
-                        turns = 6;
-                    } else {
-                        turns = 7; // Para gramaturas acima de 400g
-                    }
-                    break;
-                case 'PET':
-                    if (opWeight <= 100) {
-                        turns = 4;
-                    } else if (opWeight > 100 && opWeight <= 200) {
-                        turns = 5;
-                    } else if (opWeight > 200 && opWeight <= 300) {
-                        turns = 6;
-                    } else if (opWeight > 300 && opWeight <= 400) {
-                        turns = 7;
-                    } else {
-                        turns = 8; // Para gramaturas acima de 400g
-                    }
-                    break;
-                default:
-                    turns = 0; // Caso não reconheça o tipo de tecido
-            }
-            return turns;
-        }
-
         function updateRecordsTable() {
-            const tbody = document.getElementById('recordsTable').querySelector('tbody');
-            tbody.innerHTML = '';
+            const tbody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Limpa a tabela antes de atualizar
+
             records.forEach(record => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${record.dateTime}</td>
-                    <td>${record.activeMachines}</td>
-                    <td>${record.opNumber}</td>
-                    <td>${record.componentCode}</td>
-                    <td>${record.opQuantity}</td>
-                    <td>${record.opLength}</td>
-                    <td>${record.fabricType}</td>
-                    <td>${record.opWeight}</td>
-                    <td>${record.piecesRemoved}</td>
-                `;
-                tbody.appendChild(row);
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = record.dateTime;
+                row.insertCell(1).textContent = record.activeMachines;
+                row.insertCell(2).textContent = record.opNumber;
+                row.insertCell(3).textContent = record.componentCode;
+                row.insertCell(4).textContent = record.opQuantity;
+                row.insertCell(5).textContent = record.opLength;
+                row.insertCell(6).textContent = record.fabricType;
+                row.insertCell(7).textContent = record.opWeight;
+                row.insertCell(8).textContent = record.piecesRemoved;
             });
         }
 
         function downloadCSV() {
-            let csv = 'Data e Hora, Máquinas Ativas, Número da OP, Código do Componente, Quantidade da OP, Comprimento da OP, Tipo de Tecido, Gramatura da OP, Quantidade de Peças Retiradas\n';
+            const csvRows = [];
+            const headers = ['Data e Hora', 'Máquinas Ativas', 'Número da OP', 'Código do Componente', 'Quantidade da OP', 'Comprimento da OP', 'Tipo de Tecido', 'Gramatura da OP', 'Quantidade de Peças Retiradas'];
+            csvRows.push(headers.join(','));
+
             records.forEach(record => {
-                csv += `${record.dateTime}, ${record.activeMachines}, ${record.opNumber}, ${record.componentCode}, ${record.opQuantity}, ${record.opLength}, ${record.fabricType}, ${record.opWeight}, ${record.piecesRemoved}\n`;
+                const row = [
+                    record.dateTime,
+                    record.activeMachines,
+                    record.opNumber,
+                    record.componentCode,
+                    record.opQuantity,
+                    record.opLength,
+                    record.fabricType,
+                    record.opWeight,
+                    record.piecesRemoved
+                ];
+                csvRows.push(row.join(','));
             });
 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.setAttribute('download', 'registros_producao.csv');
-            document.body.appendChild(a);
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'records.csv');
             a.click();
-            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
