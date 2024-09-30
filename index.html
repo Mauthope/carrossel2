@@ -8,12 +8,11 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f9f9f9;
-            color: #333;
+            background-color: #f9f9f9; /* Fundo claro */
         }
         h1 {
-            color: #4CAF50;
-            text-align: center;
+            color: #333;
+            text-align: center; /* Centraliza o título */
         }
         .input-group {
             margin-bottom: 10px;
@@ -26,59 +25,67 @@
         input[type="text"],
         select {
             width: 100%;
-            padding: 10px;
+            padding: 10px; /* Aumenta o espaço interno */
             margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
             box-sizing: border-box;
+            border: 1px solid #ccc; /* Adiciona borda */
+            border-radius: 4px; /* Cantos arredondados */
         }
         button {
             padding: 10px 20px;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 4px; /* Cantos arredondados */
             cursor: pointer;
             margin-right: 5px;
             margin-top: 10px;
+            transition: background-color 0.3s; /* Transição suave */
         }
         .machine-btn {
             width: 150px;
             height: 50px;
             margin-bottom: 10px;
             font-size: 16px;
+            border-radius: 4px; /* Cantos arredondados */
         }
         .machine-buttons {
             display: flex;
-            justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
+            justify-content: center; /* Centraliza os botões */
         }
         .active {
-            background-color: red;
+            background-color: #ff4d4d; /* Tom de vermelho mais claro */
         }
         .inactive {
-            background-color: green;
+            background-color: #4CAF50; /* Verde para inativo */
         }
         .calc-btn {
-            background-color: #4CAF50;
+            background-color: #007BFF; /* Azul */
         }
         .calc-btn:hover {
-            background-color: #45a049;
-        }
-        .result-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-top: 20px;
+            background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
         }
         .result {
+            margin-top: 20px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza os resultados */
+        }
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Três colunas */
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .result-item {
             background-color: #fff;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin: 5px;
-            flex: 1 1 calc(30% - 10px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 4px; /* Cantos arredondados */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave */
+            text-align: center; /* Centraliza o texto */
         }
         table {
             margin-top: 20px;
@@ -91,19 +98,14 @@
             text-align: left;
         }
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #f2f2f2;
         }
         h2 {
             margin-top: 30px;
-            text-align: center;
+            text-align: center; /* Centraliza o subtítulo */
         }
-        #downloadBtn {
-            background-color: #007BFF;
-            margin-top: 20px;
-        }
-        #downloadBtn:hover {
-            background-color: #0056b3;
+        button:hover {
+            opacity: 0.9; /* Efeito de opacidade ao passar o mouse */
         }
     </style>
 </head>
@@ -154,13 +156,13 @@
     </form>
 
     <h2>Resultados:</h2>
-    <div class="result-container">
-        <div class="result" id="cutsResult">Número de Cortes: </div>
-        <div class="result" id="turnsResult">Número de Voltas: </div>
-        <div class="result" id="cutAmountResult">Quantidade Cortada: </div>
-        <div class="result" id="totalCutAmountResult">Quantidade Total Cortada: </div>
-        <div class="result" id="cyclesResult">Número de Carrossel: </div>
-        <div class="result" id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </div>
+    <div class="results-container">
+        <div class="result-item" id="cutsResult">Número de Cortes: </div>
+        <div class="result-item" id="turnsResult">Número de Voltas: </div>
+        <div class="result-item" id="cutAmountResult">Quantidade Cortada: </div>
+        <div class="result-item" id="totalCutAmountResult">Quantidade Total Cortada: </div>
+        <div class="result-item" id="cyclesResult">Número de Ciclos: </div>
+        <div class="result-item" id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </div>
     </div>
 
     <table id="recordsTable">
@@ -180,7 +182,7 @@
         <tbody></tbody>
     </table>
 
-    <button id="downloadBtn" onclick="downloadCSV()">Download CSV</button>
+    <button onclick="downloadCSV()">Download CSV</button>
 
     <script>
         let records = [];
@@ -222,88 +224,51 @@
             const opLength = parseFloat(document.getElementById('opLength').value);
             const fabricType = document.getElementById('fabricType').value;
             const opWeight = parseFloat(document.getElementById('opWeight').value);
-            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value) || 0;
+            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value);
+            const activeMachinesCount = getActiveMachinesCount();
 
-            if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
-                alert('Por favor, preencha todos os campos corretamente.');
-                return;
-            }
+            const cuts = Math.floor(opQuantity / piecesRemoved);
+            const turns = Math.ceil(opLength / 100);
+            const cutAmount = cuts * opWeight;
+            const totalCutAmount = cutAmount * activeMachinesCount;
+            const cycles = Math.floor(opQuantity / piecesRemoved);
+            const remainingTurns = Math.max(0, turns - cycles);
 
-            const maxCarouselLength = 540;
+            // Atualizando os resultados na tela
+            document.getElementById('cutsResult').innerText = `Número de Cortes: ${cuts}`;
+            document.getElementById('turnsResult').innerText = `Número de Voltas: ${turns}`;
+            document.getElementById('cutAmountResult').innerText = `Quantidade Cortada: ${cutAmount}`;
+            document.getElementById('totalCutAmountResult').innerText = `Quantidade Total Cortada: ${totalCutAmount}`;
+            document.getElementById('cyclesResult').innerText = `Número de Ciclos: ${cycles}`;
+            document.getElementById('remainingTurnsResult').innerText = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
-            // Cálculo do Número de Cortes
-            const numCuts = Math.floor(maxCarouselLength / opLength);
-            document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
-
-            // Cálculo do Número de Voltas
-            let numTurns = 0;
-
-            if (fabricType === 'Plano') {
-                numTurns = Math.ceil(opQuantity / (numCuts * (opWeight / 1000)));
-            } else if (fabricType === 'Tubular') {
-                numTurns = Math.ceil(opQuantity / (numCuts * (opWeight / 1000) * 0.5));
-            } else if (fabricType === 'PET') {
-                numTurns = Math.ceil(opQuantity / (numCuts * (opWeight / 1000) * 0.75));
-            }
-
-            document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
-
-            // Cálculo da Quantidade Cortada
-            const cutAmount = numCuts * opLength * (opWeight / 1000);
-            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount.toFixed(2)} kg`;
-
-            // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = cutAmount + piecesRemoved * opWeight;
-            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount.toFixed(2)} kg`;
-
-            // Cálculo do Número de Ciclos
-            const cycles = Math.floor(opQuantity / (totalCutAmount || 1));
-            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${cycles}`;
-
-            // Cálculo do Restante de Voltas para Fechar a OP
-            const remainingTurns = numTurns - cycles;
-            document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
-
-            // Armazenando registro
-            const activeMachines = Array.from(document.getElementsByClassName('machine-btn'))
-                .filter(button => button.classList.contains('active'))
-                .map(button => button.textContent)
-                .join(', ');
-
-            const dateTime = new Date().toLocaleString();
-            records.push({ dateTime, activeMachines, opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved });
-            updateTable();
-            resetForm();
+            // Adicionando o registro na tabela
+            const now = new Date();
+            const record = {
+                dateTime: now.toLocaleString(),
+                activeMachines: activeMachinesCount,
+                opNumber,
+                componentCode,
+                opQuantity,
+                opLength,
+                fabricType,
+                opWeight,
+                piecesRemoved
+            };
+            records.push(record);
+            updateRecordsTable();
         }
 
-        function updateTable() {
-            const tbody = document.getElementById('recordsTable').querySelector('tbody');
-            tbody.innerHTML = '';
+        function updateRecordsTable() {
+            const tbody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Limpa o conteúdo atual da tabela
             records.forEach(record => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${record.dateTime}</td>
-                    <td>${record.activeMachines}</td>
-                    <td>${record.opNumber}</td>
-                    <td>${record.componentCode}</td>
-                    <td>${record.opQuantity}</td>
-                    <td>${record.opLength}</td>
-                    <td>${record.fabricType}</td>
-                    <td>${record.opWeight}</td>
-                    <td>${record.piecesRemoved}</td>
-                `;
-                tbody.appendChild(row);
+                const row = tbody.insertRow();
+                Object.values(record).forEach(value => {
+                    const cell = row.insertCell();
+                    cell.innerText = value;
+                });
             });
-        }
-
-        function resetForm() {
-            document.getElementById('productionForm').reset();
-            const machineButtons = document.getElementsByClassName('machine-btn');
-            for (let button of machineButtons) {
-                button.classList.add('inactive');
-                button.classList.remove('active');
-            }
-            document.querySelectorAll('.result').forEach(result => result.textContent = result.id.replace('Result', ': ') + '0');
         }
 
         function downloadCSV() {
@@ -312,7 +277,7 @@
             csvRows.push(headers.join(','));
 
             records.forEach(record => {
-                const values = [
+                const row = [
                     record.dateTime,
                     record.activeMachines,
                     record.opNumber,
@@ -323,14 +288,19 @@
                     record.opWeight,
                     record.piecesRemoved
                 ];
-                csvRows.push(values.join(','));
+                csvRows.push(row.join(','));
             });
 
-            const csvFile = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(csvFile);
-            downloadLink.download = 'records.csv';
-            downloadLink.click();
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'records.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
