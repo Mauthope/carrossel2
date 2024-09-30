@@ -8,9 +8,11 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f9f9f9;
         }
         h1 {
             color: #333;
+            text-align: center;
         }
         .input-group {
             margin-bottom: 10px;
@@ -34,15 +36,18 @@
             cursor: pointer;
             margin-right: 5px;
             margin-top: 10px;
+            transition: background-color 0.3s;
         }
         .machine-btn {
             width: 150px;
             height: 50px;
             margin-bottom: 10px;
             font-size: 16px;
+            transition: background-color 0.3s;
         }
         .machine-buttons {
             display: flex;
+            justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -58,19 +63,21 @@
         .calc-btn:hover {
             background-color: #45a049;
         }
-        .save-btn {
-            background-color: #008CBA;
-        }
-        .save-btn:hover {
-            background-color: #007B9E;
-        }
-        .result {
+        .results-container {
             margin-top: 20px;
-            font-weight: bold;
-            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            justify-items: center;
+        }
+        .result-box {
+            background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: #f9f9f9;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
         }
         table {
             margin-top: 20px;
@@ -87,6 +94,7 @@
         }
         h2 {
             margin-top: 30px;
+            text-align: center;
         }
     </style>
 </head>
@@ -133,18 +141,17 @@
             <label for="piecesRemoved">Quantidade de Peças Retiradas:</label>
             <input type="number" id="piecesRemoved" min="0" required>
         </div>
-        <button type="button" class="calc-btn" onclick="calculateAndSave()">Calcular</button>
-        <button type="button" class="save-btn" onclick="saveRecord()">Salvar</button>
+        <button type="button" class="calc-btn" onclick="calculateAndSave()">Calcular e Salvar</button>
     </form>
 
     <h2>Resultados:</h2>
-    <div class="result">
-        <p id="cutsResult">Número de Cortes: </p>
-        <p id="turnsResult">Número de Voltas: </p>
-        <p id="cutAmountResult">Quantidade Cortada: </p>
-        <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
-        <p id="cyclesResult">Número de Ciclos: </p>
-        <p id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </p>
+    <div class="results-container">
+        <div class="result-box" id="cutsResult">Número de Cortes: </div>
+        <div class="result-box" id="turnsResult">Número de Voltas: </div>
+        <div class="result-box" id="cutAmountResult">Quantidade Cortada: </div>
+        <div class="result-box" id="totalCutAmountResult">Quantidade Total Cortada: </div>
+        <div class="result-box" id="cyclesResult">Número de Ciclos: </div>
+        <div class="result-box" id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </div>
     </div>
 
     <table id="recordsTable">
@@ -227,17 +234,16 @@
             } else if (fabricType === 'Tubular') {
                 numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
             } else if (fabricType === 'PET') {
-                numTurns = 25; // Valor fixo para PET
+                numTurns = 25;
             }
-
             document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
 
             // Cálculo da Quantidade Cortada
-            const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
+            const cutAmount = Math.floor(opQuantity * numCuts);
             document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
             // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = cutAmount - piecesRemoved;
+            const totalCutAmount = cutAmount + piecesRemoved;
             document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
             // Cálculo do Número de Ciclos
@@ -245,20 +251,11 @@
             document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
             // Parte fracionária do número de ciclos
-            const fractionalPart = totalCutAmount / opQuantity - numCycles;
+            const fractionalPart = totalCutAmount % opQuantity / opQuantity;
             const remainingTurns = Math.floor(numTurns * fractionalPart);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
-        }
 
-        function saveRecord() {
-            const opNumber = document.getElementById('opNumber').value;
-            const componentCode = document.getElementById('componentCode').value;
-            const opQuantity = parseFloat(document.getElementById('opQuantity').value);
-            const opLength = parseFloat(document.getElementById('opLength').value);
-            const fabricType = document.getElementById('fabricType').value;
-            const opWeight = parseFloat(document.getElementById('opWeight').value);
-            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value) || 0;
-
+            // Atualizando a tabela com o novo registro
             const newRecord = {
                 dateTime: new Date().toLocaleString(),
                 activeMachines: getActiveMachinesCount(),
