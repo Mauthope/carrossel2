@@ -8,104 +8,100 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f9f9f9; /* Fundo claro */
+            background-color: #f9f9f9;
+            color: #333;
         }
         h1 {
             color: #333;
-            text-align: center; /* Centraliza o título */
+            text-align: center;
+            margin-bottom: 20px;
         }
         .input-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         label {
             display: block;
             margin-bottom: 5px;
+            font-weight: bold;
         }
         input[type="number"],
         input[type="text"],
         select {
             width: 100%;
-            padding: 10px; /* Aumenta o espaço interno */
+            padding: 10px;
             margin-bottom: 10px;
             box-sizing: border-box;
-            border: 1px solid #ccc; /* Adiciona borda */
-            border-radius: 4px; /* Cantos arredondados */
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
             padding: 10px 20px;
             color: white;
             border: none;
-            border-radius: 4px; /* Cantos arredondados */
             cursor: pointer;
             margin-right: 5px;
             margin-top: 10px;
-            transition: background-color 0.3s; /* Transição suave */
+            border-radius: 4px;
+            font-size: 16px;
         }
         .machine-btn {
             width: 150px;
             height: 50px;
-            margin-bottom: 10px;
             font-size: 16px;
-            border-radius: 4px; /* Cantos arredondados */
+            border-radius: 4px;
         }
         .machine-buttons {
             display: flex;
+            justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
-            justify-content: center; /* Centraliza os botões */
         }
         .active {
-            background-color: #ff4d4d; /* Tom de vermelho mais claro */
+            background-color: red;
         }
         .inactive {
-            background-color: #4CAF50; /* Verde para inativo */
+            background-color: green;
         }
         .calc-btn {
-            background-color: #007BFF; /* Azul */
+            background-color: #4CAF50;
         }
         .calc-btn:hover {
-            background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
+            background-color: #45a049;
         }
         .result {
             margin-top: 20px;
             font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            align-items: center; /* Centraliza os resultados */
-        }
-        .results-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Três colunas */
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .result-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
             padding: 10px;
-            border-radius: 4px; /* Cantos arredondados */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave */
-            text-align: center; /* Centraliza o texto */
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
         }
         table {
             margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: white;
         }
         table, th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: left;
         }
         th {
             background-color: #f2f2f2;
+            font-weight: bold;
         }
         h2 {
             margin-top: 30px;
-            text-align: center; /* Centraliza o subtítulo */
+            color: #4CAF50;
         }
-        button:hover {
-            opacity: 0.9; /* Efeito de opacidade ao passar o mouse */
+        button#download {
+            background-color: #2196F3;
+            padding: 10px 15px;
+            margin-top: 15px;
+        }
+        button#download:hover {
+            background-color: #1976D2;
         }
     </style>
 </head>
@@ -156,13 +152,13 @@
     </form>
 
     <h2>Resultados:</h2>
-    <div class="results-container">
-        <div class="result-item" id="cutsResult">Número de Cortes: </div>
-        <div class="result-item" id="turnsResult">Número de Voltas: </div>
-        <div class="result-item" id="cutAmountResult">Quantidade Cortada: </div>
-        <div class="result-item" id="totalCutAmountResult">Quantidade Total Cortada: </div>
-        <div class="result-item" id="cyclesResult">Número de Ciclos: </div>
-        <div class="result-item" id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </div>
+    <div class="result">
+        <p id="cutsResult">Número de Cortes: </p>
+        <p id="turnsResult">Número de Voltas: </p>
+        <p id="cutAmountResult">Quantidade Cortada: </p>
+        <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
+        <p id="cyclesResult">Número de Ciclos: </p>
+        <p id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </p>
     </div>
 
     <table id="recordsTable">
@@ -182,7 +178,7 @@
         <tbody></tbody>
     </table>
 
-    <button onclick="downloadCSV()">Download CSV</button>
+    <button id="download" onclick="downloadCSV()">Download CSV</button>
 
     <script>
         let records = [];
@@ -224,83 +220,105 @@
             const opLength = parseFloat(document.getElementById('opLength').value);
             const fabricType = document.getElementById('fabricType').value;
             const opWeight = parseFloat(document.getElementById('opWeight').value);
-            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value);
-            const activeMachinesCount = getActiveMachinesCount();
+            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value) || 0;
 
-            const cuts = Math.floor(opQuantity / piecesRemoved);
-            const turns = Math.ceil(opLength / 100);
-            const cutAmount = cuts * opWeight;
-            const totalCutAmount = cutAmount * activeMachinesCount;
-            const cycles = Math.floor(opQuantity / piecesRemoved);
-            const remainingTurns = Math.max(0, turns - cycles);
+            if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
 
-            // Atualizando os resultados na tela
-            document.getElementById('cutsResult').innerText = `Número de Cortes: ${cuts}`;
-            document.getElementById('turnsResult').innerText = `Número de Voltas: ${turns}`;
-            document.getElementById('cutAmountResult').innerText = `Quantidade Cortada: ${cutAmount}`;
-            document.getElementById('totalCutAmountResult').innerText = `Quantidade Total Cortada: ${totalCutAmount}`;
-            document.getElementById('cyclesResult').innerText = `Número de Ciclos: ${cycles}`;
-            document.getElementById('remainingTurnsResult').innerText = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+            const maxCarouselLength = 540;
 
-            // Adicionando o registro na tabela
-            const now = new Date();
+            // Cálculo do Número de Cortes
+            const numCuts = Math.floor(maxCarouselLength / opLength);
+            document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
+
+            // Cálculo do Número de Voltas
+            let numTurns = 0;
+
+            if (fabricType === 'Plano') {
+                numTurns = Math.floor(((120 - opWeight) * 0.375) + piecesRemoved);
+            } else if (fabricType === 'Tubular') {
+                numTurns = Math.floor(((120 - opWeight) * 0.375) + piecesRemoved);
+            } else if (fabricType === 'PET') {
+                numTurns = Math.floor(((120 - opWeight) * 0.375) + piecesRemoved);
+            }
+
+            document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+
+            // Cálculo da Quantidade Cortada
+            const cutAmount = numCuts * opQuantity;
+            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+
+            // Cálculo da Quantidade Total Cortada
+            const totalCutAmount = cutAmount + piecesRemoved;
+            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
+
+            // Cálculo do Número de Ciclos
+            const cycles = Math.ceil(cutAmount / opQuantity);
+            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${cycles}`;
+
+            // Cálculo do Restante de Voltas
+            const remainingTurns = Math.max(0, numTurns - piecesRemoved);
+            document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+
+            // Registro da produção
+            const activeMachines = getActiveMachinesCount();
             const record = {
-                dateTime: now.toLocaleString(),
-                activeMachines: activeMachinesCount,
-                opNumber,
-                componentCode,
-                opQuantity,
-                opLength,
-                fabricType,
-                opWeight,
-                piecesRemoved
+                date: new Date().toLocaleString(),
+                machines: activeMachines,
+                opNumber: opNumber,
+                componentCode: componentCode,
+                opQuantity: opQuantity,
+                opLength: opLength,
+                fabricType: fabricType,
+                opWeight: opWeight,
+                piecesRemoved: piecesRemoved,
             };
             records.push(record);
             updateRecordsTable();
+            document.getElementById('productionForm').reset();
+            resetMachineButtons();
+        }
+
+        function resetMachineButtons() {
+            const machineButtons = document.getElementsByClassName('machine-btn');
+            for (let button of machineButtons) {
+                button.classList.remove('active');
+                button.classList.add('inactive');
+            }
         }
 
         function updateRecordsTable() {
-            const tbody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = ''; // Limpa o conteúdo atual da tabela
+            const tableBody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
             records.forEach(record => {
-                const row = tbody.insertRow();
-                Object.values(record).forEach(value => {
-                    const cell = row.insertCell();
-                    cell.innerText = value;
-                });
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = record.date;
+                row.insertCell(1).textContent = record.machines;
+                row.insertCell(2).textContent = record.opNumber;
+                row.insertCell(3).textContent = record.componentCode;
+                row.insertCell(4).textContent = record.opQuantity;
+                row.insertCell(5).textContent = record.opLength;
+                row.insertCell(6).textContent = record.fabricType;
+                row.insertCell(7).textContent = record.opWeight;
+                row.insertCell(8).textContent = record.piecesRemoved;
             });
         }
 
         function downloadCSV() {
-            const csvRows = [];
-            const headers = ['Data e Hora', 'Máquinas Ativas', 'Número da OP', 'Código do Componente', 'Quantidade da OP', 'Comprimento da OP', 'Tipo de Tecido', 'Gramatura da OP', 'Quantidade de Peças Retiradas'];
-            csvRows.push(headers.join(','));
-
+            let csvContent = "data:text/csv;charset=utf-8," 
+                + "Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP,Quantidade de Peças Retiradas\n";
             records.forEach(record => {
-                const row = [
-                    record.dateTime,
-                    record.activeMachines,
-                    record.opNumber,
-                    record.componentCode,
-                    record.opQuantity,
-                    record.opLength,
-                    record.fabricType,
-                    record.opWeight,
-                    record.piecesRemoved
-                ];
-                csvRows.push(row.join(','));
+                csvContent += `${record.date},${record.machines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.piecesRemoved}\n`;
             });
 
-            const csvString = csvRows.join('\n');
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'records.csv');
-            link.style.visibility = 'hidden';
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "registro_producao.csv");
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
         }
     </script>
 </body>
