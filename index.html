@@ -313,6 +313,9 @@
             // Cálculo da Quantidade Cortada
             const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
             document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+            // Cálculo da Quantidade Total Cortada
+    const totalCutAmount = Math.floor((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts); // Arredondando para menor
+    document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
             // Cálculo do Número de Ciclos (mantendo a fórmula original)
             const numCycles = opQuantity / cutAmount; // Fórmula original
