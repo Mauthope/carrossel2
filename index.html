@@ -105,13 +105,19 @@
         #downloadBtn:hover {
             background-color: #0056b3;
         }
-        .result-block {
-    margin-bottom: 10px; /* Espaçamento entre os blocos */
+       .results-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Cria duas colunas de igual largura */
+    gap: 10px; /* Espaçamento entre os blocos */
+}
+
+.result-block {
     padding: 10px; /* Espaçamento interno */
     border: 1px solid #ccc; /* Borda opcional */
     border-radius: 5px; /* Bordas arredondadas */
     background-color: #f9f9f9; /* Cor de fundo */
 }
+
 
     </style>
 </head>
