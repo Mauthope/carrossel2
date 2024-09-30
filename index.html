@@ -90,7 +90,6 @@
     </div>
 
     <form id="productionForm">
-        <!-- Campos do formulário permanecem os mesmos -->
         <div class="input-group">
             <label for="opNumber">Número da OP:</label>
             <input type="text" id="opNumber" maxlength="13" oninput="formatOPNumber(this)" required>
@@ -211,96 +210,82 @@
             let numTurns = 0;
 
             if (fabricType === 'Plano') {
-                numTurns = calculateTurnsPlano(opWeight);
+                numTurns = Math.floor(((120 - opWeight) * 0.375) + 40);
             } else if (fabricType === 'Tubular') {
-                numTurns = calculateTurnsTubular(opWeight);
+                numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
             } else if (fabricType === 'PET') {
                 numTurns = 25; // Valor fixo para PET
             }
 
-            document.getElementById('turnsResult').textContent = `Número de Voltas: ${Math.ceil(numTurns)}`;
+            document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
 
             // Cálculo da Quantidade Cortada
             const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
-    document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
             // Cálculo do Número de Ciclos (mantendo a fórmula original)
             const numCycles = opQuantity / cutAmount; // Fórmula original
             document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
             // Cálculo do Restante de Voltas para Fechar a OP
-            const fractionalPart = numCycles - Math.floor(numCycles); // Parte decimal
-            const additionalCuts = Math.ceil(fractionalPart * cutAmount);
-            const remainingTurns = Math.ceil((additionalCuts * numTurns) / cutAmount);
+            const fractionalPart = numCycles - Math.floor(numCycles); // Parte fracionária do número de ciclos
+            const remainingTurns = Math.floor(numTurns * fractionalPart);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
-            // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = Math.floor((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts); // Arredondando para menor
-    document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
-
-            const activeMachines = getActiveMachinesCount();
-            const record = {
-                timestamp: new Date().toLocaleString(),
-                activeMachines,
-                opNumber,
-                componentCode,
-                opQuantity,
-                opLength,
-                fabricType,
-                opWeight,
-                piecesRemoved
+            // Atualizando a tabela com o novo registro
+            const newRecord = {
+                dateTime: new Date().toLocaleString(),
+                activeMachines: getActiveMachinesCount(),
+                opNumber: opNumber,
+                componentCode: componentCode,
+                opQuantity: opQuantity,
+                opLength: opLength,
+                fabricType: fabricType,
+                opWeight: opWeight,
+                piecesRemoved: piecesRemoved
             };
 
-            records.push(record);
-            updateRecordsTable();
+            records.push(newRecord);
+            updateTable();
         }
 
-        function calculateTurnsPlano(weight) {
-            let numTurns = 80; // Voltas padrão para gramatura 65
-            if (weight !== 65) {
-                numTurns = 80 - (weight - 65) * 1.23;
-            }
-            return numTurns;
-        }
-
-        function calculateTurnsTubular(weight) {
-            let numTurns = 45; // Voltas padrão para gramatura 65
-            if (weight !== 65) {
-                numTurns = 45 - (weight - 65) * 0.7;
-            }
-            return numTurns;
-        }
-
-        function updateRecordsTable() {
-            const tableBody = document.querySelector('#recordsTable tbody');
-            tableBody.innerHTML = '';
+        function updateTable() {
+            const tbody = document.querySelector('#recordsTable tbody');
+            tbody.innerHTML = '';
 
             records.forEach(record => {
                 const row = document.createElement('tr');
-                for (let key in record) {
-                    const cell = document.createElement('td');
-                    cell.textContent = record[key];
-                    row.appendChild(cell);
-                }
-                tableBody.appendChild(row);
+                row.innerHTML = `
+                    <td>${record.dateTime}</td>
+                    <td>${record.activeMachines}</td>
+                    <td>${record.opNumber}</td>
+                    <td>${record.componentCode}</td>
+                    <td>${record.opQuantity}</td>
+                    <td>${record.opLength}</td>
+                    <td>${record.fabricType}</td>
+                    <td>${record.opWeight}</td>
+                    <td>${record.piecesRemoved}</td>
+                `;
+                tbody.appendChild(row);
             });
         }
 
         function downloadCSV() {
-            const csvContent = "data:text/csv;charset=utf-8," + 
-                ["Data e Hora, Máquinas Ativas, Número da OP, Código do Componente, Quantidade da OP, Comprimento da OP, Tipo de Tecido, Gramatura da OP, Quantidade de Peças Retiradas"]
-                .concat(records.map(record => [
-                    record.timestamp, record.activeMachines, record.opNumber, record.componentCode,
-                    record.opQuantity, record.opLength, record.fabricType, record.opWeight, record.piecesRemoved
-                ].join(',')))
-                .join('\n');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP,Quantidade de Peças Retiradas\n";
+
+            records.forEach(record => {
+                const row = `${record.dateTime},${record.activeMachines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.piecesRemoved}`;
+                csvContent += row + "\n";
+            });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement('a');
             link.setAttribute('href', encodedUri);
-            link.setAttribute('download', 'production_records.csv');
+            link.setAttribute('download', 'registro_producao.csv');
             document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
