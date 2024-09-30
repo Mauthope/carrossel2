@@ -278,71 +278,72 @@
         }
 
         function calculateAndSave() {
-            const opNumber = document.getElementById('opNumber').value;
-            const componentCode = document.getElementById('componentCode').value;
-            const opQuantity = parseFloat(document.getElementById('opQuantity').value);
-            const opLength = parseFloat(document.getElementById('opLength').value);
-            const fabricType = document.getElementById('fabricType').value;
-            const opWeight = parseFloat(document.getElementById('opWeight').value);
-            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value) || 0;
+    const opNumber = document.getElementById('opNumber').value;
+    const componentCode = document.getElementById('componentCode').value;
+    const opQuantity = parseFloat(document.getElementById('opQuantity').value);
+    const opLength = parseFloat(document.getElementById('opLength').value);
+    const fabricType = document.getElementById('fabricType').value;
+    const opWeight = parseFloat(document.getElementById('opWeight').value);
+    const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value) || 0;
 
-            if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
-                alert('Por favor, preencha todos os campos corretamente.');
-                return;
-            }
+    if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
+        alert('Por favor, preencha todos os campos corretamente.');
+        return;
+    }
 
-            const maxCarouselLength = 540;
+    const maxCarouselLength = 540;
 
-            // Cálculo do Número de Cortes
-            const numCuts = Math.floor(maxCarouselLength / opLength);
-            document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
+    // Cálculo do Número de Cortes
+    const numCuts = Math.floor(maxCarouselLength / opLength);
+    document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
 
-            // Cálculo do Número de Voltas
-            let numTurns = 0;
+    // Cálculo do Número de Voltas
+    let numTurns = 0;
 
-            if (fabricType === 'Plano') {
-                numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
-            } else if (fabricType === 'Tubular') {
-                numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
-            } else if (fabricType === 'PET') {
-                numTurns = 25; // Valor fixo para PET
-            }
+    if (fabricType === 'Plano') {
+        numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
+    } else if (fabricType === 'Tubular') {
+        numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
+    } else if (fabricType === 'PET') {
+        numTurns = 25; // Valor fixo para PET
+    }
 
-            document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+    document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
 
-            // Cálculo da Quantidade Cortada
-            const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
-            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
-      
+    // Cálculo da Quantidade Cortada
+    const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
+    document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
-            // Cálculo do Número de Ciclos (mantendo a fórmula original)
-            const numCycles = opQuantity / cutAmount; // Fórmula original
-            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
+    // Cálculo do Número de Ciclos (mantendo a fórmula original)
+    const numCycles = cutAmount > 0 ? opQuantity / cutAmount : 0; // Verificação para evitar divisão por zero
+    document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
-            // Cálculo do Restante de Voltas para Fechar a OP
-            const fractionalPart = numCycles - Math.floor(numCycles); // Parte fracionária do número de ciclos
-            const remainingTurns = Math.floor(numTurns * fractionalPart);
-            document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
- // Cálculo da Quantidade Total Cortada
-            const totalCutAmount = Math.floor((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts); // Arredondando para menor
-    document.getElementById('totalCutAmountResult').textContent = Quantidade Total Cortada: ${totalCutAmount};
+    // Cálculo do Restante de Voltas para Fechar a OP
+    const fractionalPart = numCycles - Math.floor(numCycles); // Parte fracionária do número de ciclos
+    const remainingTurns = Math.floor(numTurns * fractionalPart);
+    document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
-            // Atualizando a tabela com o novo registro
-            const newRecord = {
-                dateTime: new Date().toLocaleString(),
-                activeMachines: getActiveMachinesCount(),
-                opNumber: opNumber,
-                componentCode: componentCode,
-                opQuantity: opQuantity,
-                opLength: opLength,
-                fabricType: fabricType,
-                opWeight: opWeight,
-                piecesRemoved: piecesRemoved
-            };
+    // Cálculo da Quantidade Total Cortada
+    const totalCutAmount = Math.floor((numCuts * Math.floor(numCycles) * numTurns) + remainingTurns * numCuts); // Corrigido
+    document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
-            records.push(newRecord);
-            updateTable();
-        }
+    // Atualizando a tabela com o novo registro
+    const newRecord = {
+        dateTime: new Date().toLocaleString(),
+        activeMachines: getActiveMachinesCount(),
+        opNumber: opNumber,
+        componentCode: componentCode,
+        opQuantity: opQuantity,
+        opLength: opLength,
+        fabricType: fabricType,
+        opWeight: opWeight,
+        piecesRemoved: piecesRemoved
+    };
+
+    records.push(newRecord);
+    updateTable();
+}
+
 
         function updateTable() {
             const tbody = document.querySelector('#recordsTable tbody');
