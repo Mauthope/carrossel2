@@ -225,7 +225,7 @@
     document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
             // Cálculo do Número de Ciclos (mantendo a fórmula original)
-            const numCycles = opQuantity / cutAmount; // Fórmula original
+            const numCycles = Math.floor (opQuantity / cutAmount); // Fórmula original
             document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
             // Cálculo do Restante de Voltas para Fechar a OP
