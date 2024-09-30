@@ -313,9 +313,7 @@
             // Cálculo da Quantidade Cortada
             const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
             document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
-            // Cálculo da Quantidade Total Cortada
-    const totalCutAmount = Math.floor((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts); // Arredondando para menor
-    document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
+      
 
             // Cálculo do Número de Ciclos (mantendo a fórmula original)
             const numCycles = opQuantity / cutAmount; // Fórmula original
@@ -325,6 +323,9 @@
             const fractionalPart = numCycles - Math.floor(numCycles); // Parte fracionária do número de ciclos
             const remainingTurns = Math.floor(numTurns * fractionalPart);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+ // Cálculo da Quantidade Total Cortada
+            const totalCutAmount = Math.floor((numTurns * Math.floor(numCycles) + remainingTurns) * numCuts); // Arredondando para menor
+    document.getElementById('totalCutAmountResult').textContent = Quantidade Total Cortada: ${totalCutAmount};
 
             // Atualizando a tabela com o novo registro
             const newRecord = {
