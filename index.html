@@ -58,8 +58,21 @@
         .calc-btn:hover {
             background-color: #45a049;
         }
-        .result {
+        .save-btn {
+            background-color: #2196F3;
+        }
+        .save-btn:hover {
+            background-color: #0b7dda;
+        }
+        .results-container {
             margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .result {
+            margin-bottom: 10px;
             font-weight: bold;
         }
         table {
@@ -123,16 +136,19 @@
             <label for="piecesRemoved">Quantidade de Peças Retiradas:</label>
             <input type="number" id="piecesRemoved" min="0" required>
         </div>
-        <button type="button" class="calc-btn" onclick="calculateAndSave()">Calcular e Salvar</button>
+        <button type="button" class="calc-btn" onclick="calculateResults()">Calcular</button>
+        <button type="button" class="save-btn" onclick="saveRecord()">Salvar</button>
     </form>
 
-    <h2>Resultados:</h2>
-    <p id="cutsResult">Número de Cortes: </p>
-    <p id="turnsResult">Número de Voltas: </p>
-    <p id="cutAmountResult">Quantidade Cortada: </p>
-    <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
-    <p id="cyclesResult">Número de Ciclos: </p>
-    <p id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </p>
+    <div class="results-container">
+        <h2>Resultados:</h2>
+        <p id="cutsResult" class="result">Número de Cortes: </p>
+        <p id="turnsResult" class="result">Número de Voltas: </p>
+        <p id="cutAmountResult" class="result">Quantidade Cortada: </p>
+        <p id="totalCutAmountResult" class="result">Quantidade Total Cortada: </p>
+        <p id="cyclesResult" class="result">Número de Ciclos: </p>
+        <p id="remainingTurnsResult" class="result">Restante de Voltas para Fechar a OP: </p>
+    </div>
 
     <table id="recordsTable">
         <thead>
@@ -186,7 +202,7 @@
             input.value = value;
         }
 
-        function calculateAndSave() {
+        function calculateResults() {
             const opNumber = document.getElementById('opNumber').value;
             const componentCode = document.getElementById('componentCode').value;
             const opQuantity = parseFloat(document.getElementById('opQuantity').value);
@@ -210,7 +226,7 @@
             let numTurns = 0;
 
             if (fabricType === 'Plano') {
-                numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
+                numTurns = Math.floor(((120 - opWeight) * 0.375) + 40);
             } else if (fabricType === 'Tubular') {
                 numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
             } else if (fabricType === 'PET') {
@@ -220,19 +236,32 @@
             document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
 
             // Cálculo da Quantidade Cortada
-            const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
-            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+            const cutAmount = numCuts * opLength;
+            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount} cm`;
 
-            // Cálculo do Número de Ciclos (mantendo a fórmula original)
-            const numCycles = opQuantity / cutAmount; // Fórmula original
-            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
+            // Cálculo da Quantidade Total Cortada
+            const totalCutAmount = cutAmount * numTurns;
+            document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount} cm`;
 
-            // Cálculo do Restante de Voltas para Fechar a OP
-            const fractionalPart = numCycles - Math.floor(numCycles); // Parte fracionária do número de ciclos
+            // Cálculo do Número de Ciclos
+            const numCycles = opQuantity / piecesRemoved;
+            const fractionalPart = numCycles - Math.floor(numCycles);
+            document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${Math.floor(numCycles)}`;
+
+            // Cálculo da Parte Fracionária do Número de Voltas
             const remainingTurns = Math.floor(numTurns * fractionalPart);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+        }
 
-            // Atualizando a tabela com o novo registro
+        function saveRecord() {
+            const opNumber = document.getElementById('opNumber').value;
+            const componentCode = document.getElementById('componentCode').value;
+            const opQuantity = parseFloat(document.getElementById('opQuantity').value);
+            const opLength = parseFloat(document.getElementById('opLength').value);
+            const fabricType = document.getElementById('fabricType').value;
+            const opWeight = parseFloat(document.getElementById('opWeight').value);
+            const piecesRemoved = parseInt(document.getElementById('piecesRemoved').value) || 0;
+
             const newRecord = {
                 dateTime: new Date().toLocaleString(),
                 activeMachines: getActiveMachinesCount(),
