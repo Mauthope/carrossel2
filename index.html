@@ -5,24 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Produção de OP</title>
     <style>
-        body {
+       body {
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f9f9f9;
             color: #333;
         }
         h1 {
-            color: #333;
+            color: #4CAF50;
             text-align: center;
-            margin-bottom: 20px;
         }
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
         }
         input[type="number"],
         input[type="text"],
@@ -30,25 +28,24 @@
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
-            box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         button {
             padding: 10px 20px;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
             margin-right: 5px;
             margin-top: 10px;
-            border-radius: 4px;
-            font-size: 16px;
         }
         .machine-btn {
             width: 150px;
             height: 50px;
+            margin-bottom: 10px;
             font-size: 16px;
-            border-radius: 4px;
         }
         .machine-buttons {
             display: flex;
@@ -68,40 +65,45 @@
         .calc-btn:hover {
             background-color: #45a049;
         }
-        .result {
+        .result-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
             margin-top: 20px;
-            font-weight: bold;
-            padding: 10px;
-            background-color: #e7f3fe;
-            border-left: 6px solid #2196F3;
+        }
+        .result {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 5px;
+            flex: 1 1 calc(30% - 10px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         table {
             margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            background-color: white;
         }
         table, th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 8px;
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
-            font-weight: bold;
+            background-color: #4CAF50;
+            color: white;
         }
         h2 {
             margin-top: 30px;
-            color: #4CAF50;
+            text-align: center;
         }
-        button#download {
-            background-color: #2196F3;
-            padding: 10px 15px;
-            margin-top: 15px;
+        #downloadBtn {
+            background-color: #007BFF;
+            margin-top: 20px;
         }
-        button#download:hover {
-            background-color: #1976D2;
+        #downloadBtn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
