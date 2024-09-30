@@ -181,7 +181,7 @@
                 <option value="">Selecione</option>
                 <option value="Plano">Plano</option>
                 <option value="Tubular">Tubular</option>
-                <option value="PET">PET</option>
+                <option value="PECH">PECH</option>
             </select>
         </div>
         <div class="input-group">
@@ -305,7 +305,7 @@
         numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
     } else if (fabricType === 'Tubular') {
         numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
-    } else if (fabricType === 'PET') {
+    } else if (fabricType === 'PECH') {
         numTurns = 25; // Valor fixo para PET
     }
 
