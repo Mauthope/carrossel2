@@ -228,14 +228,20 @@
             document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
 
             // Cálculo do Restante de Voltas para Fechar a OP
-            const fractionalPart = numCycles - Math.floor(numCycles);
-            const remainingTurns = Math.ceil(fractionalPart * cutAmount);
+            const fractionalPart = numCycles - Math.floor(numCycles); // Parte decimal
+            const additionalCuts = Math.ceil(fractionalPart * cutAmount);
+            const remainingTurns = Math.ceil((additionalCuts * numTurns) / cutAmount);
             document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
 
-            // Adicionando dados à tabela
-            const activeMachines = getActiveMachinesCount();
-            const record = {
-                dateTime: new Date().toLocaleString(),
+            // Adicionar registro na tabela
+            const currentDateTime = new Date().toLocaleString();
+            const activeMachines = Array.from(document.getElementsByClassName('machine-btn'))
+                .filter(button => button.classList.contains('active'))
+                .map(button => button.innerText)
+                .join(', ');
+
+            records.push({
+                dateTime: currentDateTime,
                 activeMachines: activeMachines,
                 opNumber: opNumber,
                 componentCode: componentCode,
@@ -243,58 +249,57 @@
                 opLength: opLength,
                 fabricType: fabricType,
                 opWeight: opWeight,
-                piecesRemoved: piecesRemoved,
-            };
-            records.push(record);
-            updateRecordsTable();
+                piecesRemoved: piecesRemoved
+            });
 
-            // Limpar formulário
-            document.getElementById('productionForm').reset();
-            resetMachineButtons();
+            updateTable();
         }
 
         function calculateTurnsPlano(weight) {
-            return Math.ceil(weight / 10); // Ajustar a lógica conforme necessário
+            if (weight <= 30) return 50;
+            else if (weight <= 50) return 45;
+            else if (weight <= 70) return 40;
+            else return 35; // Para weights acima de 70
         }
 
         function calculateTurnsTubular(weight) {
-            return Math.ceil(weight / 20); // Ajustar a lógica conforme necessário
+            if (weight <= 30) return 55;
+            else if (weight <= 50) return 50;
+            else if (weight <= 70) return 45;
+            else return 40; // Para weights acima de 70
         }
 
-        function updateRecordsTable() {
-            const tbody = document.querySelector('#recordsTable tbody');
-            tbody.innerHTML = '';
+        function updateTable() {
+            const tbody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = ''; // Limpa a tabela antes de adicionar os registros
+
             records.forEach(record => {
-                const row = `<tr>
-                    <td>${record.dateTime}</td>
-                    <td>${record.activeMachines}</td>
-                    <td>${record.opNumber}</td>
-                    <td>${record.componentCode}</td>
-                    <td>${record.opQuantity}</td>
-                    <td>${record.opLength}</td>
-                    <td>${record.fabricType}</td>
-                    <td>${record.opWeight}</td>
-                    <td>${record.piecesRemoved}</td>
-                </tr>`;
-                tbody.innerHTML += row;
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = record.dateTime;
+                row.insertCell(1).textContent = record.activeMachines;
+                row.insertCell(2).textContent = record.opNumber;
+                row.insertCell(3).textContent = record.componentCode;
+                row.insertCell(4).textContent = record.opQuantity;
+                row.insertCell(5).textContent = record.opLength;
+                row.insertCell(6).textContent = record.fabricType;
+                row.insertCell(7).textContent = record.opWeight;
+                row.insertCell(8).textContent = record.piecesRemoved;
             });
         }
 
-        function resetMachineButtons() {
-            const machineButtons = document.getElementsByClassName('machine-btn');
-            for (let button of machineButtons) {
-                button.classList.remove('active');
-                button.classList.add('inactive');
-            }
-        }
-
         function downloadCSV() {
-            const csvContent = "data:text/csv;charset=utf-8,"
-                + records.map(record => Object.values(record).join(",")).join("\n");
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP,Quantidade de Peças Retiradas\n";
+
+            records.forEach(record => {
+                const row = `${record.dateTime},${record.activeMachines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.piecesRemoved}`;
+                csvContent += row + "\n";
+            });
+
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "productions.csv");
+            link.setAttribute("download", "records.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
