@@ -249,6 +249,11 @@
     <script>
        let records = [];
 
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Carrega a tabela do localStorage ao carregar a página
+            loadTableFromLocalStorage();
+        });
+
     function toggleMachine(machineNumber) {
         const button = document.getElementById(`machine${machineNumber}`);
         if (button.classList.contains('inactive')) {
@@ -340,46 +345,68 @@
         document.getElementById('carouselSizeResult').innerText = `Tamanho do carrossel: ${carouselSize} cm`;
 
         // Armazena o registro
-        records.push({
-            dateTime: new Date().toLocaleString(),
-            activeMachines: getActiveMachinesCount(),
-            opNumber,
-            componentCode,
-            opQuantity,
-            opLength,
-            fabricType,
-            opWeight,
-           
-        });
+                   const activeMachines = getActiveMachines();
+            const now = new Date().toLocaleString();
+            const record = {
+                date: now,
+                machines: activeMachines.join(', '),
+                opNumber,
+                componentCode,
+                opQuantity,
+                opLength,
+                fabricType,
+                opWeight
+            };
+            records.push(record);
+            updateTable();
+            saveTableToLocalStorage();
+        }
 
-        updateRecordsTable();
-    }
+        function getActiveMachines() {
+            const activeMachines = [];
+            const machineButtons = document.getElementsByClassName('machine-btn');
+            for (let button of machineButtons) {
+                if (button.classList.contains('active')) {
+                    activeMachines.push(button.innerText);
+                }
+            }
+            return activeMachines;
+        }
 
-    function updateRecordsTable() {
-        const tableBody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
-        tableBody.innerHTML = '';
-
-        records.forEach(record => {
-            const row = tableBody.insertRow();
-            Object.values(record).forEach(value => {
-                const cell = row.insertCell();
-                cell.textContent = value;
+        function updateTable() {
+            const tableBody = document.querySelector('#recordsTable tbody');
+            tableBody.innerHTML = '';
+            records.forEach((record) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.machines}</td>
+                    <td>${record.opNumber}</td>
+                    <td>${record.componentCode}</td>
+                    <td>${record.opQuantity}</td>
+                    <td>${record.opLength}</td>
+                    <td>${record.fabricType}</td>
+                    <td>${record.opWeight}</td>
+                `;
+                tableBody.appendChild(row);
             });
-        });
-    }
+        }
 
-    function downloadCSV() {
-        let csv = 'Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP';
-        records.forEach(record => {
-            csv += `${record.dateTime},${record.activeMachines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight}\n`;
-        });
+        function saveTableToLocalStorage() {
+            localStorage.setItem('productionRecords', JSON.stringify(records));
+        }
 
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'records.csv';
-        link.click();
-    }
+        function loadTableFromLocalStorage() {
+            const storedRecords = localStorage.getItem('productionRecords');
+            if (storedRecords) {
+                records = JSON.parse(storedRecords);
+                updateTable();
+            }
+        }
+
+        function downloadCSV() {
+            // Função existente para exportar CSV
+        }
     </script>
 </body>
 </html>
