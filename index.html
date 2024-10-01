@@ -218,10 +218,9 @@
     <div class="result-block color4">
         <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
     </div>
-
-<div class="result-block color2">
-    <p id="carouselSizeResult">Tamanho do Carrossel: </p>
-</div>
+    <div class="result-block color2">
+        <p id="carouselSizeResult">Tamanho do carrossel: </p>
+    </div>
 </div>
 
 
@@ -248,7 +247,6 @@
 
     <script>
        let records = [];
-        const records = [];
 
     function toggleMachine(machineNumber) {
         const button = document.getElementById(`machine${machineNumber}`);
@@ -297,10 +295,6 @@
         // Nova variável que substitui o valor de maxCarouselLength
         const maxCarouselLength = 540 / opLength;
 
-        // Calcular o tamanho do carrossel
-        const carouselSize = numCuts * opLength; // Multiplicação dos cortes pelo comprimento da OP
-        document.getElementById('carouselSizeResult').textContent = `Tamanho do Carrossel: ${carouselSize} cm`;
-
         // Cálculo do Número de Cortes
         const numCuts = Math.floor(maxCarouselLength);
         document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
@@ -340,6 +334,9 @@
         // Cálculo da Quantidade Total Cortada
         const totalCutAmount = Math.floor((numCuts * Math.floor(numCycles) * numTurns) + remainingTurns * numCuts);
         document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
+
+        const carouselSize = Math.floor(540 / opLength) * opLength; // Tamanho do carrossel
+        document.getElementById('carouselSizeResult').innerText = `Tamanho do carrossel: ${carouselSize} cm`;
 
         // Armazena o registro
         records.push({
