@@ -298,7 +298,7 @@
 
         // Cálculo do Número de Cortes
         const numCuts = Math.floor(maxCarouselLength);
-        document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
+        document.getElementById('cutsResult').textContent = `Número de Cortes na mesa: ${numCuts}`;
 
         // Cálculo do Número de Voltas
         let numTurns = 0;
@@ -317,15 +317,15 @@
             numTurns = Math.floor(opQuantity / numCuts); // Ajusta o número de voltas
         }
 
-        document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+        document.getElementById('turnsResult').textContent = `Número de Voltas Carrossel: ${numTurns}`;
 
         // Cálculo da Quantidade Cortada
         const cutAmount = Math.floor(numCuts * numTurns);
-        document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+        document.getElementById('cutAmountResult').textContent = `Quantidade Cortada por Carrossel: ${cutAmount}`;
 
         // Cálculo do Número de Ciclos
         const numCycles = cutAmount > 0 ? opQuantity / cutAmount : 0;
-        document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
+        document.getElementById('cyclesResult').textContent = `Número de carrosséis: ${numCycles}`;
 
         // Cálculo do Restante de Voltas para Fechar a OP
         const fractionalPart = numCycles - Math.floor(numCycles);
