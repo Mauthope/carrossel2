@@ -234,7 +234,7 @@
                 <th>Comprimento da OP</th>
                 <th>Tipo de Tecido</th>
                 <th>Gramatura da OP</th>
-                <th>Quantidade de Peças Retiradas</th>
+                
             </tr>
         </thead>
         <tbody></tbody>
@@ -342,7 +342,7 @@
             opLength,
             fabricType,
             opWeight,
-            piecesRemoved
+           
         });
 
         updateRecordsTable();
@@ -362,9 +362,9 @@
     }
 
     function downloadCSV() {
-        let csv = 'Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP,Quantidade de Peças Retiradas\n';
+        let csv = 'Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP';
         records.forEach(record => {
-            csv += `${record.dateTime},${record.activeMachines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.piecesRemoved}\n`;
+            csv += `${record.dateTime},${record.activeMachines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight}\n`;
         });
 
         const blob = new Blob([csv], { type: 'text/csv' });
