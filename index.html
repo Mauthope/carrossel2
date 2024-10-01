@@ -301,15 +301,24 @@
     // Cálculo do Número de Voltas
     let numTurns = 0;
 
-    if (fabricType === 'Plano') {
-        numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
-    } else if (fabricType === 'Tubular') {
-        numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
-    } else if (fabricType === 'PATCH') {
-        numTurns = 25; // Valor fixo para PET
-    }
+            if (fabricType === 'Plano') {
+                numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
+            } else if (fabricType === 'Tubular') {
+                numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
+            } else if (fabricType === 'PATCH') {
+                numTurns = 25;
+            }
 
-    document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+            let cutAmount = Math.floor(numCuts * numTurns);
+
+            // Ajuste para quantidade cortada exceder a quantidade da OP
+            if (cutAmount > opQuantity) {
+                numTurns = Math.floor(opQuantity / numCuts);
+                cutAmount = Math.floor(numCuts * numTurns);
+            }
+
+            document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+            document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
     // Cálculo da Quantidade Cortada
     const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
