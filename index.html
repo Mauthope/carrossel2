@@ -192,7 +192,25 @@ h2 {
     background-color: #ffebee;
 }
 
+.results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
 
+.result-block {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    cursor: pointer; /* Adiciona um cursor de clique */
+    transition: background-color 0.3s;
+}
+
+.result-block:hover {
+    background-color: #f0f0f0; /* Efeito hover */
+}
 
     </style>
 </head>
@@ -243,7 +261,7 @@ h2 {
    <h2>Resultados:</h2>
 
 <div class="results-container">
-        <div class="result-block color2">
+        <div class="result-block color2"onclick="showPopup('Tamanho do carrossel: X metros')">
         <p id="carouselSizeResult">Tamanho do carrossel: </p>
     </div>
     <div class="result-block color1">
@@ -301,7 +319,9 @@ h2 {
             // Carrega a tabela do localStorage ao carregar a página
             loadTableFromLocalStorage();
         });
-
+function showPopup(message) {
+        alert(message); // Mostra o pop-up com a informação
+    }
     function toggleMachine(machineNumber) {
         const button = document.getElementById(`machine${machineNumber}`);
         if (button.classList.contains('inactive')) {
