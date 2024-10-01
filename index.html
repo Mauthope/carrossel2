@@ -298,7 +298,7 @@
     const numCuts = Math.floor(maxCarouselLength / opLength);
     document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
 
-    // Cálculo do Número de Voltas
+    // Cálculo do Número de Voltas com a nova regra
     let numTurns = 0;
 
     if (fabricType === 'Plano') {
@@ -306,7 +306,12 @@
     } else if (fabricType === 'Tubular') {
         numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
     } else if (fabricType === 'PATCH') {
-        numTurns = 25; // Valor fixo para PET
+        numTurns = 25; // Valor fixo para PATCH
+    }
+
+    // Regra para ajustar o Número de Voltas se "Número de Voltas * Número de Cortes" for maior que "Quantidade da OP"
+    if (numTurns * numCuts > opQuantity) {
+        numTurns = Math.floor(opQuantity / numCuts);
     }
 
     document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
@@ -328,18 +333,10 @@
     const totalCutAmount = Math.floor((numCuts * Math.floor(numCycles) * numTurns) + remainingTurns * numCuts); // Corrigido
     document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
 
-    // Atualizando a tabela com o novo registro
-    const newRecord = {
-        dateTime: new Date().toLocaleString(),
-        activeMachines: getActiveMachinesCount(),
-        opNumber: opNumber,
-        componentCode: componentCode,
-        opQuantity: opQuantity,
-        opLength: opLength,
-        fabricType: fabricType,
-        opWeight: opWeight,
-        piecesRemoved: piecesRemoved
-    };
+    // Atualizando a tabela com os resultados
+    updateTable(opNumber, componentCode, opQuantity, opLength, fabricType, opWeight, piecesRemoved);
+}
+
 
     records.push(newRecord);
     updateTable();
