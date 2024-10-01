@@ -105,44 +105,47 @@
         #downloadBtn:hover {
             background-color: #0056b3;
         }
-        .results-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
+       .results-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Cria duas colunas de igual largura */
+    gap: 10px; /* Espaçamento entre os blocos */
+}
 
-        .result-block {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
+.result-block {
+    padding: 10px; /* Espaçamento interno */
+    border: 1px solid #ccc; /* Borda opcional */
+    border-radius: 5px; /* Bordas arredondadas */
+    font-size: 1.2em; /* Aumenta o tamanho da fonte */
+    font-weight: bold; /* Texto em negrito */
+}
 
-        /* Definindo cores diferentes para cada bloco */
-        .color1 {
-            background-color: #e0f7fa; /* Azul claro */
-        }
+/* Definindo cores diferentes para cada bloco */
+.color1 {
+    background-color: #e0f7fa; /* Azul claro */
+}
 
-        .color2 {
-            background-color: #ffe0b2; /* Laranja claro */
-        }
+.color2 {
+    background-color: #ffe0b2; /* Laranja claro */
+}
 
-        .color3 {
-            background-color: #d1c4e9; /* Lilás claro */
-        }
+.color3 {
+    background-color: #d1c4e9; /* Lilás claro */
+}
 
-        .color4 {
-            background-color: #c8e6c9; /* Verde claro */
-        }
+.color4 {
+    background-color: #c8e6c9; /* Verde claro */
+}
 
-        .color5 {
-            background-color: #ffccbc; /* Coral claro */
-        }
+.color5 {
+    background-color: #ffccbc; /* Coral claro */
+}
 
-        .color6 {
-            background-color: #ffe4e1; /* Rosa claro */
-        }
+.color6 {
+    background-color: #ffe4e1; /* Rosa claro */
+}
+
+
+
     </style>
 </head>
 <body>
@@ -185,6 +188,7 @@
             <label for="opWeight">Gramatura da OP:</label>
             <input type="number" id="opWeight" min="0" required>
         </div>
+     </div>
         <button type="button" class="calc-btn" onclick="calculateAndSave()">Calcular e Salvar</button>
     </form>
 
@@ -203,7 +207,7 @@
         <p id="cyclesResult">Número de Carrossel: </p>
     </div>
 
-    <div class="result-block color6">
+        <div class="result-block color6">
         <p id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </p>
     </div>
 
@@ -215,11 +219,13 @@
         <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
     </div>
 
-    <!-- Novo bloco para Tamanho do Carrossel -->
     <div class="result-block color2">
         <p id="carouselSizeResult">Tamanho do Carrossel: </p>
     </div>
 </div>
+
+
+
 
     <table id="recordsTable">
         <thead>
@@ -232,6 +238,7 @@
                 <th>Comprimento da OP</th>
                 <th>Tipo de Tecido</th>
                 <th>Gramatura da OP</th>
+                
             </tr>
         </thead>
         <tbody></tbody>
@@ -267,114 +274,113 @@
     function formatOPNumber(input) {
         let value = input.value.replace(/\D/g, '');
         if (value.length > 3) value = value.substring(0, 3) + '.' + value.substring(3);
-        if (value.length > 7) value = value.substring(0, 7) + '.' + value.substring(7);
-        if (value.length > 11) value = value.substring(0, 11) + '-' + value.substring(11);
+        if (value.length > 7) value = value.substring(0, 7) + '/' + value.substring(7);
+        if (value.length > 10) value = value.substring(0, 10) + '.' + value.substring(10);
         input.value = value;
     }
 
     function calculateAndSave() {
+        const opNumber = document.getElementById('opNumber').value;
+        const componentCode = document.getElementById('componentCode').value;
         const opQuantity = parseFloat(document.getElementById('opQuantity').value);
         const opLength = parseFloat(document.getElementById('opLength').value);
-        const opWeight = parseFloat(document.getElementById('opWeight').value);
         const fabricType = document.getElementById('fabricType').value;
+        const opWeight = parseFloat(document.getElementById('opWeight').value);
+       
 
-        const cutsResult = Math.ceil(opQuantity / 25);
-        document.getElementById('cutsResult').innerText = `Número de Cortes na mesa: ${cutsResult}`;
+        if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
+            alert('Por favor, preencha todos os campos corretamente.');
+            return;
+        }
 
-        const totalCarrouselSize = opLength * opQuantity;
-        const turnsResult = Math.ceil(totalCarrouselSize / 250); // Considerando que 250cm é o tamanho do carrossel
-        document.getElementById('turnsResult').innerText = `Número de Voltas Carrossel: ${turnsResult}`;
-
-        const machineCount = getActiveMachinesCount();
-        const cyclesResult = Math.ceil(turnsResult / machineCount);
-        document.getElementById('cyclesResult').innerText = `Número de Carrossel: ${cyclesResult}`;
-
-        const remainingTurns = turnsResult - (machineCount * cyclesResult);
-        document.getElementById('remainingTurnsResult').innerText = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
-
-        const cutAmountResult = Math.ceil(opQuantity / (turnsResult || 1));
-        document.getElementById('cutAmountResult').innerText = `Quantidade Cortada por Carrossel: ${cutAmountResult}`;
-
-        const totalCutAmountResult = cutAmountResult * cyclesResult;
-        document.getElementById('totalCutAmountResult').innerText = `Quantidade Total Cortada: ${totalCutAmountResult}`;
+        // Nova variável que substitui o valor de maxCarouselLength
+        const maxCarouselLength = 540 / opLength;
 
         // Novo cálculo para Tamanho do Carrossel
         const carouselSize = Math.ceil(totalCarrouselSize / 250); // Aqui você pode usar a fórmula que desejar
         document.getElementById('carouselSizeResult').innerText = `Tamanho do Carrossel: ${carouselSize}`;
 
-        // Salvar registro
-        saveRecord();
-    }
+        // Cálculo do Número de Cortes
+        const numCuts = Math.floor(maxCarouselLength);
+        document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
 
-    function saveRecord() {
-        const opNumber = document.getElementById('opNumber').value;
-        const componentCode = document.getElementById('componentCode').value;
-        const opQuantity = document.getElementById('opQuantity').value;
-        const opLength = document.getElementById('opLength').value;
-        const fabricType = document.getElementById('fabricType').value;
-        const opWeight = document.getElementById('opWeight').value;
-        const activeMachines = Array.from(document.getElementsByClassName('machine-btn'))
-            .filter(btn => btn.classList.contains('active'))
-            .map(btn => btn.innerText).join(', ');
+        // Cálculo do Número de Voltas
+        let numTurns = 0;
 
-        const record = {
+        if (fabricType === 'Plano') {
+            numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
+        } else if (fabricType === 'Tubular') {
+            numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
+        } else if (fabricType === 'PATCH') {
+            numTurns = 25; // Valor fixo para PATCH
+        }
+
+        // Verificação da regra de substituição de Voltas
+        const totalCuts = numTurns * numCuts; // Número total de cortes baseado em voltas e cortes
+        if (totalCuts > opQuantity) {
+            numTurns = Math.floor(opQuantity / numCuts); // Ajusta o número de voltas
+        }
+
+        document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+
+        // Cálculo da Quantidade Cortada
+        const cutAmount = Math.floor(numCuts * numTurns);
+        document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
+
+        // Cálculo do Número de Ciclos
+        const numCycles = cutAmount > 0 ? opQuantity / cutAmount : 0;
+        document.getElementById('cyclesResult').textContent = `Número de Ciclos: ${numCycles}`;
+
+        // Cálculo do Restante de Voltas para Fechar a OP
+        const fractionalPart = numCycles - Math.floor(numCycles);
+        const remainingTurns = Math.ceil(numTurns * fractionalPart);
+        document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+
+        // Cálculo da Quantidade Total Cortada
+        const totalCutAmount = Math.floor((numCuts * Math.floor(numCycles) * numTurns) + remainingTurns * numCuts);
+        document.getElementById('totalCutAmountResult').textContent = `Quantidade Total Cortada: ${totalCutAmount}`;
+
+        // Armazena o registro
+        records.push({
             dateTime: new Date().toLocaleString(),
-            machines: activeMachines,
+            activeMachines: getActiveMachinesCount(),
             opNumber,
             componentCode,
             opQuantity,
             opLength,
             fabricType,
-            opWeight
-        };
+            opWeight,
+           
+        });
 
-        records.push(record);
         updateRecordsTable();
     }
 
     function updateRecordsTable() {
-        const tbody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
-        tbody.innerHTML = '';
+        const tableBody = document.getElementById('recordsTable').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = '';
 
         records.forEach(record => {
-            const row = tbody.insertRow();
-            row.insertCell(0).innerText = record.dateTime;
-            row.insertCell(1).innerText = record.machines;
-            row.insertCell(2).innerText = record.opNumber;
-            row.insertCell(3).innerText = record.componentCode;
-            row.insertCell(4).innerText = record.opQuantity;
-            row.insertCell(5).innerText = record.opLength;
-            row.insertCell(6).innerText = record.fabricType;
-            row.insertCell(7).innerText = record.opWeight;
+            const row = tableBody.insertRow();
+            Object.values(record).forEach(value => {
+                const cell = row.insertCell();
+                cell.textContent = value;
+            });
         });
     }
 
     function downloadCSV() {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP\n";
-        
+        let csv = 'Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP';
         records.forEach(record => {
-            const row = [
-                record.dateTime,
-                record.machines,
-                record.opNumber,
-                record.componentCode,
-                record.opQuantity,
-                record.opLength,
-                record.fabricType,
-                record.opWeight
-            ].join(",");
-            csvContent += row + "\n";
+            csv += `${record.dateTime},${record.activeMachines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight}\n`;
         });
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "registros_producao.csv");
-        document.body.appendChild(link);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'records.csv';
         link.click();
-        document.body.removeChild(link);
     }
-</script>
+    </script>
 </body>
 </html>
