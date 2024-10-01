@@ -330,7 +330,7 @@
         // Cálculo do Restante de Voltas para Fechar a OP
         const fractionalPart = numCycles - Math.floor(numCycles);
         const remainingTurns = Math.ceil(numTurns * fractionalPart);
-        document.getElementById('remainingTurnsResult').textContent = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
+        document.getElementById('remainingTurnsResult').textContent = `Mais um Carrossel com este número de voltas para Fechar a OP: ${remainingTurns}`;
 
         // Cálculo da Quantidade Total Cortada
         const totalCutAmount = Math.floor((numCuts * Math.floor(numCycles) * numTurns) + remainingTurns * numCuts);
