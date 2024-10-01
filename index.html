@@ -295,36 +295,25 @@
     const maxCarouselLength = 540;
 
     // Cálculo do Número de Cortes
-const numCuts = Math.floor(maxCarouselLength / opLength);
-document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
+    const numCuts = Math.floor(maxCarouselLength / opLength);
+    document.getElementById('cutsResult').textContent = `Número de Cortes: ${numCuts}`;
 
-// Cálculo do Número de Voltas
-let numTurns = 0;
+    // Cálculo do Número de Voltas
+    let numTurns = 0;
 
-if (fabricType === 'Plano') {
-    numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
-} else if (fabricType === 'Tubular') {
-    numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
-} else if (fabricType === 'PATCH') {
-    numTurns = 25; // Valor fixo para PET
-}
+    if (fabricType === 'Plano') {
+        numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
+    } else if (fabricType === 'Tubular') {
+        numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
+    } else if (fabricType === 'PATCH') {
+        numTurns = 25; // Valor fixo para PET
+    }
 
-document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
+    document.getElementById('turnsResult').textContent = `Número de Voltas: ${numTurns}`;
 
-// Cálculo da Quantidade Cortada
-let cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
-const opQuantity = parseInt(document.getElementById('opQuantityInput').value); // Valor informado pelo usuário
-
-// Verificação para ajustar o número de voltas
-if (cutAmount > opQuantity) {
-    // Ajustar o número de voltas para ficar dentro da quantidade da OP
-    numTurns = Math.floor(opQuantity / numCuts); // Arredonda para menor
-    cutAmount = numCuts * numTurns; // Recalcula a quantidade cortada com o novo número de voltas
-}
-
-document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
-document.getElementById('turnsResult').textContent = `Número de Voltas Ajustado: ${numTurns}`;
-
+    // Cálculo da Quantidade Cortada
+    const cutAmount = Math.floor(numCuts * numTurns); // Arredondando para menor
+    document.getElementById('cutAmountResult').textContent = `Quantidade Cortada: ${cutAmount}`;
 
     // Cálculo do Número de Ciclos (mantendo a fórmula original)
     const numCycles = cutAmount > 0 ? opQuantity / cutAmount : 0; // Verificação para evitar divisão por zero
