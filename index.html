@@ -5,143 +5,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Produção de OP</title>
     <style>
-       body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        h1 {
-            color: #4CAF50;
-            text-align: center;
-        }
-        .input-group {
-            margin-bottom: 10px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="number"],
-        input[type="text"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 10px 20px;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-right: 5px;
-            margin-top: 10px;
-        }
-        .machine-btn {
-            width: 150px;
-            height: 50px;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .machine-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .active {
-            background-color: red;
-        }
-        .inactive {
-            background-color: green;
-        }
-        .calc-btn {
-            background-color: #4CAF50;
-        }
-        .calc-btn:hover {
-            background-color: #45a049;
-        }
-        .result-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-        .result {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 15px;
-            margin: 5px;
-            flex: 1 1 calc(30% - 10px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        table {
-            margin-top: 20px;
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        h2 {
-            margin-top: 30px;
-            text-align: center;
-        }
-        #downloadBtn {
-            background-color: #007BFF;
-            margin-top: 20px;
-        }
-        #downloadBtn:hover {
-            background-color: #0056b3;
-        }
-       .results-container {
+      body {
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
+    background-color: #f4f6f9;
+    color: #333;
+}
+
+h1 {
+    color: #3f51b5;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #666;
+}
+
+input[type="number"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+select:focus {
+    border-color: #3f51b5;
+}
+
+button {
+    padding: 12px 25px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-top: 12px;
+    transition: background-color 0.3s;
+    font-size: 1em;
+}
+
+.machine-btn {
+    width: 160px;
+    height: 50px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+}
+
+.machine-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.active {
+    background-color: #f44336;
+}
+
+.inactive {
+    background-color: #4caf50;
+}
+
+.calc-btn {
+    background-color: #3f51b5;
+}
+
+.calc-btn:hover {
+    background-color: #3949ab;
+}
+
+.result-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 25px;
+}
+
+.result {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 10px;
+    flex: 1 1 calc(30% - 20px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.result:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    margin-top: 25px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1em;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #3f51b5;
+    color: white;
+    text-transform: uppercase;
+}
+
+h2 {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+#downloadBtn {
+    background-color: #007BFF;
+    margin-top: 25px;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+#downloadBtn:hover {
+    background-color: #0056b3;
+}
+
+.results-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Cria duas colunas de igual largura */
-    gap: 10px; /* Espaçamento entre os blocos */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
 }
 
 .result-block {
-    padding: 10px; /* Espaçamento interno */
-    border: 1px solid #ccc; /* Borda opcional */
-    border-radius: 5px; /* Bordas arredondadas */
-    font-size: 1.2em; /* Aumenta o tamanho da fonte */
-    font-weight: bold; /* Texto em negrito */
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-/* Definindo cores diferentes para cada bloco */
 .color1 {
-    background-color: #e0f7fa; /* Azul claro */
+    background-color: #e1f5fe;
 }
 
 .color2 {
-    background-color: #ffe0b2; /* Laranja claro */
+    background-color: #ffecb3;
 }
 
 .color3 {
-    background-color: #d1c4e9; /* Lilás claro */
+    background-color: #ede7f6;
 }
 
 .color4 {
-    background-color: #c8e6c9; /* Verde claro */
+    background-color: #c8e6c9;
 }
 
 .color5 {
-    background-color: #ffccbc; /* Coral claro */
+    background-color: #ffccbc;
 }
 
 .color6 {
-    background-color: #ffe4e1; /* Rosa claro */
+    background-color: #ffebee;
 }
 
 
