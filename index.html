@@ -251,6 +251,7 @@ h2 {
                 <option value="Plano">Plano</option>
                 <option value="Tubular">Tubular</option>
                 <option value="PATCH">PATCH</option>
+                <option value="Saia">Saia</option>
             </select>
         </div>
         <div class="input-group">
@@ -384,7 +385,9 @@ function showPopup(message) {
         } else if (fabricType === 'Tubular') {
             numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
         } else if (fabricType === 'PATCH') {
-            numTurns = 25; // Valor fixo para PATCH
+            numTurns = 25; // Valor fixo para PATCH;
+        } else if (fabricType === 'Saia') {
+            numTurns = Math.floor(((82 - opWeight) * 0.29) + 40)
         }
 
         // Verificação da regra de substituição de Voltas
