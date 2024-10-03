@@ -6,182 +6,215 @@
     <title>Controle de Produção de OP</title>
     <style>
       body {
-        font-family: 'Roboto', sans-serif;
-        margin: 20px;
-        background-color: #f4f6f9;
-        color: #333;
-      }
+    font-family: 'Roboto', sans-serif;
+    margin: 20px;
+    background-color: #f4f6f9;
+    color: #333;
+}
 
-      h1 {
-        color: #3f51b5;
-        text-align: center;
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 20px;
-      }
+h1 {
+    color: #3f51b5;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
 
-      .input-group {
-        margin-bottom: 15px;
-      }
+.input-group {
+    margin-bottom: 15px;
+}
 
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: bold;
-        color: #666;
-      }
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #666;
+}
 
-      input[type="number"],
-      input[type="text"],
-      select {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        box-sizing: border-box;
-        transition: border-color 0.3s;
-      }
+input[type="number"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
 
-      input[type="number"]:focus,
-      input[type="text"]:focus,
-      select:focus {
-        border-color: #3f51b5;
-      }
+input[type="number"]:focus,
+input[type="text"]:focus,
+select:focus {
+    border-color: #3f51b5;
+}
 
-      button {
-        padding: 12px 25px;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-right: 8px;
-        margin-top: 12px;
-        transition: background-color 0.3s;
-        font-size: 1em;
-      }
+button {
+    padding: 12px 25px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-top: 12px;
+    transition: background-color 0.3s;
+    font-size: 1em;
+}
 
-      .machine-btn {
-        width: 160px;
-        height: 50px;
-        margin-bottom: 10px;
-        font-size: 16px;
-        border-radius: 6px;
-      }
+.machine-btn {
+    width: 160px;
+    height: 50px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+}
 
-      .machine-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 25px;
-      }
+.machine-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
 
-      .active {
-        background-color: #f44336;
-      }
+.active {
+    background-color: #f44336;
+}
 
-      .inactive {
-        background-color: #4caf50;
-      }
+.inactive {
+    background-color: #4caf50;
+}
 
-      .calc-btn {
-        background-color: #3f51b5;
-      }
+.calc-btn {
+    background-color: #3f51b5;
+}
 
-      .calc-btn:hover {
-        background-color: #3949ab;
-      }
+.calc-btn:hover {
+    background-color: #3949ab;
+}
 
-      .result-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        margin-top: 25px;
-      }
+.result-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 25px;
+}
 
-      .result {
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 20px;
-        margin: 10px;
-        flex: 1 1 calc(30% - 20px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.3s ease;
-      }
+.result {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    margin: 10px;
+    flex: 1 1 calc(30% - 20px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
 
-      .result:hover {
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      }
+.result:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
 
-      table {
-        margin-top: 25px;
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 1em;
-      }
+table {
+    margin-top: 25px;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1em;
+}
 
-      table, th, td {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: left;
-      }
+table, th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
 
-      th {
-        background-color: #3f51b5;
-        color: white;
-        text-transform: uppercase;
-      }
+th {
+    background-color: #3f51b5;
+    color: white;
+    text-transform: uppercase;
+}
 
-      h2 {
-        margin-top: 40px;
-        text-align: center;
-        font-size: 2em;
-        font-weight: bold;
-      }
+h2 {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+}
 
-      #downloadBtn {
-        padding: 12px 25px;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-right: 8px;
-        margin-top: 12px;
-        transition: background-color 0.3s;
-        font-size: 1em;
-      }
+#downloadBtn {
+    padding: 12px 25px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    margin-top: 12px;
+    transition: background-color 0.3s;
+    font-size: 1em;
+}
 
-      #downloadBtn:hover {
-        background-color: #0056b3;
-      }
+#downloadBtn:hover {
+    background-color: #0056b3;
+}
 
-      .results-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-      }
+.results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
 
-      .result-block {
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1.3em;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+.result-block {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
 
-      .result-block:hover {
-        background-color: #f0f0f0;
-      }
+.color1 {
+    background-color: #e1f5fe;
+}
 
-      .color1 { background-color: #e1f5fe; }
-      .color2 { background-color: #ffecb3; }
-      .color3 { background-color: #ede7f6; }
-      .color4 { background-color: #c8e6c9; }
-      .color5 { background-color: #ffccbc; }
-      .color6 { background-color: #ffebee; }
+.color2 {
+    background-color: #ffecb3;
+}
+
+.color3 {
+    background-color: #ede7f6;
+}
+
+.color4 {
+    background-color: #c8e6c9;
+}
+
+.color5 {
+    background-color: #ffccbc;
+}
+
+.color6 {
+    background-color: #ffebee;
+}
+
+.results-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.result-block {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.3em;
+    font-weight: bold;
+    cursor: pointer; /* Adiciona um cursor de clique */
+    transition: background-color 0.3s;
+}
+
+.result-block:hover {
+    background-color: #f0f0f0; /* Efeito hover */
+}
+
     </style>
 </head>
 <body>
@@ -225,145 +258,255 @@
             <label for="opWeight">Gramatura da OP:</label>
             <input type="number" id="opWeight" min="0" required>
         </div>
+     </div>
         <button type="button" class="calc-btn" onclick="calculateAndSave()">Calcular e Salvar</button>
     </form>
 
-    <h2>Resultados:</h2>
+   <h2>Resultados:</h2>
 
-    <div class="results-container">
-        <div class="result-block color2" onclick="showPopup('Tamanho ao qual deve-se ajustar o carrossel para não sobrar muito material após cortado, este ajuste é feito no carrossel trocando os pinos de lugar. Recurso importante para não gerar resíduo.')">
-            <p id="carouselSizeResult">Tamanho do carrossel: </p>
-        </div>
-        <div class="result-block color1" onclick="showPopup('É o número de vezes ao qual você irá cortar o tecido na mesa.')">
-            <p id="cutsResult">Número de Cortes na mesa: </p>
-        </div>
-        <div class="result-block color2" onclick="showPopup('É o número de voltas que o carrossel irá fazer, pode ser definido no painel da máquina.')">
-            <p id="turnsResult">Número de Voltas Carrossel: </p>
-        </div>
-        <div class="result-block color5" onclick="showPopup('É o número de vezes ao qual você irá retirar o tecido do carrossel e colocá-lo na mesa.')">
-            <p id="cyclesResult">Número de Carrossel: </p>
-        </div>
-        <div class="result-block color6" onclick="showPopup('É o número de voltas restantes para fechar a quantidade da OP, por exemplo: se o número de carrossel é 5,45, serão 5 carrosséis e mais 0,45 que, convertendo em voltas, fecharão o total da OP.')">
-            <p id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </p>
-        </div>
-        <div class="result-block color3" onclick="showPopup('É o número de ciclos que faltam para atingir a OP.')">
-            <p id="remainingCyclesResult">Ciclos Restantes: </p>
-        </div>
+<div class="results-container">
+        <div class="result-block color2"onclick="showPopup('Tamanho ao qual deve-se ajustar o carrossel para não sobrar muito material após cortado, este ajuste é feito no carrossel trocando os pinos de lugar. Recurso importante para não gerar resíduo.')">
+        <p id="carouselSizeResult">Tamanho do carrossel: </p>
+    </div>
+    <div class="result-block color1"onclick="showPopup('É o número de vezes ao qual você irá cortar o tecido na mesa.')">
+        <p id="cutsResult">Número de Cortes na mesa: </p>
     </div>
 
-    <table>
+    <div class="result-block color2"onclick="showPopup('É o número de voltas que o carrossel irá fazer, pode ser definido no painel da máquina.')">
+        <p id="turnsResult">Número de Voltas Carrossel: </p>
+    </div>
+    
+    <div class="result-block color5"onclick="showPopup('É o número de vezes ao qual você irá retirar o tecido do carrossel e colocá-lô na mesa.')">
+        <p id="cyclesResult">Número de Carrossel: </p>
+    </div>
+
+        <div class="result-block color6"onclick="showPopup('É o número de voltas restantes para fechar a quantidade da OP, por exemplo: de o número de carrossel é 5,45 serão 5 carrosséis e mais 0,45 que convertento em voltas fecharão o total da OP.')">
+        <p id="remainingTurnsResult">Restante de Voltas para Fechar a OP: </p>
+    </div>
+
+    <div class="result-block color3"onclick="showPopup('É a quantidade cortada por um carrossel, quando termina o número de voltas de um ciclo completo do carrossel.')">
+        <p id="cutAmountResult">Quantidade Cortada por Carrossel: </p>
+    </div>
+
+    <div class="result-block color4"onclick="showPopup('É a quantidade total depois de terminar de rodar todos os carrosséis, este valor sempre deve ser o mais próximo possível da quantidade solicitada na OP.')">
+        <p id="totalCutAmountResult">Quantidade Total Cortada: </p>
+    </div>
+
+</div>
+
+
+
+  <button onclick="downloadCSV()">Download CSV</button>
+    <table id="recordsTable">
         <thead>
             <tr>
-                <th>OP</th>
-                <th>Código Componente</th>
-                <th>Quantidade</th>
-                <th>Comprimento (cm)</th>
-                <th>Gramatura</th>
+                <th>Data e Hora</th>
+                <th>Máquinas Ativas</th>
+                <th>Número da OP</th>
+                <th>Código do Componente</th>
+                <th>Quantidade da OP</th>
+                <th>Comprimento da OP</th>
                 <th>Tipo de Tecido</th>
-                <th>Tamanho Carrossel</th>
-                <th>Número Cortes</th>
-                <th>Número Voltas</th>
-                <th>Número Carrossel</th>
-                <th>Voltas Restantes</th>
-                <th>Ciclos Restantes</th>
+                <th>Gramatura da OP</th>
+                
             </tr>
         </thead>
-        <tbody id="resultsTable">
-        </tbody>
+        <tbody></tbody>
     </table>
 
-    <button id="downloadBtn" onclick="downloadCSV()">Download CSV</button>
+  
 
     <script>
-      let activeMachine = null;
+let records = [];
 
-      function toggleMachine(machineNumber) {
-        if (activeMachine === machineNumber) {
-          document.getElementById('machine' + machineNumber).classList.toggle('active');
-          activeMachine = null;
-        } else {
-          if (activeMachine) {
-            document.getElementById('machine' + activeMachine).classList.remove('active');
-          }
-          document.getElementById('machine' + machineNumber).classList.add('active');
-          activeMachine = machineNumber;
+document.addEventListener('DOMContentLoaded', (event) => {
+    // Carrega a tabela do localStorage ao carregar a página
+    loadTableFromLocalStorage();
+});
+
+function showPopup(message) {
+    alert(message); // Mostra o pop-up com a informação
+}
+
+function toggleMachine(machineNumber) {
+    const button = document.getElementById(`machine${machineNumber}`);
+    if (button.classList.contains('inactive')) {
+        button.classList.remove('inactive');
+        button.classList.add('active');
+    } else {
+        button.classList.remove('active');
+        button.classList.add('inactive');
+    }
+}
+
+function getActiveMachinesCount() {
+    let count = 0;
+    const machineButtons = document.getElementsByClassName('machine-btn');
+    for (let button of machineButtons) {
+        if (button.classList.contains('active')) {
+            count++;
         }
-      }
+    }
+    return count;
+}
 
-      function formatOPNumber(input) {
-        let value = input.value.replace(/\D/g, '');
-        if (value.length > 7) {
-          input.value = value.slice(0, 7) + '.' + value.slice(7);
-        } else {
-          input.value = value;
+function formatOPNumber(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 3) value = value.substring(0, 3) + '.' + value.substring(3);
+    if (value.length > 7) value = value.substring(0, 7) + '/' + value.substring(7);
+    if (value.length > 10) value = value.substring(0, 10) + '.' + value.substring(10);
+    input.value = value;
+}
+
+function calculateAndSave() {
+    const opNumber = document.getElementById('opNumber').value;
+    const componentCode = document.getElementById('componentCode').value;
+    const opQuantity = parseFloat(document.getElementById('opQuantity').value);
+    const opLength = parseFloat(document.getElementById('opLength').value);
+    const fabricType = document.getElementById('fabricType').value;
+    const opWeight = parseFloat(document.getElementById('opWeight').value);
+
+    if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
+        alert('Por favor, preencha todos os campos corretamente.');
+        return;
+    }
+
+    const maxCarouselLength = 540 / opLength;
+    const numCuts = Math.floor(maxCarouselLength);
+    const numCutsText = `Número de Cortes na mesa: ${numCuts}`;
+    document.getElementById('cutsResult').textContent = numCutsText;
+
+    let numTurns = 0;
+
+    if (fabricType === 'Plano') {
+        numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
+    } else if (fabricType === 'Tubular') {
+        numTurns = Math.floor(((82 - opWeight) * 0.3) + 40);
+    } else if (fabricType === 'PATCH') {
+        numTurns = 25;
+    } else if (fabricType === 'Saia') {
+        numTurns = Math.floor(((120 - opWeight) * 0.55) + 40)
+    }
+
+    const totalCuts = numTurns * numCuts;
+    if (totalCuts > opQuantity) {
+        numTurns = Math.floor(opQuantity / numCuts);
+    }
+
+    const numTurnsText = `Número de Voltas Carrossel: ${numTurns}`;
+    document.getElementById('turnsResult').textContent = numTurnsText;
+
+    const cutAmount = Math.floor(numCuts * numTurns);
+    const cutAmountText = `Quantidade Cortada por Carrossel: ${cutAmount}`;
+    document.getElementById('cutAmountResult').textContent = cutAmountText;
+
+    const numCycles = cutAmount > 0 ? opQuantity / cutAmount : 0;
+    const numCyclesText = `Número de carrosséis: ${numCycles}`;
+    document.getElementById('cyclesResult').textContent = numCyclesText;
+
+    const fractionalPart = numCycles - Math.floor(numCycles);
+    const remainingTurns = Math.ceil(numTurns * fractionalPart);
+    const remainingTurnsText = `Mais um Carrossel com este número de voltas para Fechar a OP: ${remainingTurns}`;
+    document.getElementById('remainingTurnsResult').textContent = remainingTurnsText;
+
+    const totalCutAmount = Math.floor((numCuts * Math.floor(numCycles) * numTurns) + remainingTurns * numCuts);
+    const totalCutAmountText = `Quantidade Total Cortada: ${totalCutAmount}`;
+    document.getElementById('totalCutAmountResult').textContent = totalCutAmountText;
+
+    const carouselSize = Math.floor(540 / opLength) * opLength;
+    const carouselSizeText = `Tamanho do carrossel: ${carouselSize} cm`;
+    document.getElementById('carouselSizeResult').innerText = carouselSizeText;
+
+    const activeMachines = getActiveMachines();
+    const now = new Date().toLocaleString();
+    const record = {
+        date: now,
+        machines: activeMachines.join(', '),
+        opNumber,
+        componentCode,
+        opQuantity,
+        opLength,
+        fabricType,
+        opWeight,
+        numCuts,
+        numTurns,
+        cutAmount,
+        numCycles,
+        remainingTurns,
+        totalCutAmount,
+        carouselSize
+    };
+
+    records.push(record);
+    updateTable();
+    saveTableToLocalStorage();
+}
+
+function getActiveMachines() {
+    const activeMachines = [];
+    const machineButtons = document.getElementsByClassName('machine-btn');
+    for (let button of machineButtons) {
+        if (button.classList.contains('active')) {
+            activeMachines.push(button.innerText);
         }
-      }
+    }
+    return activeMachines;
+}
 
-      function showPopup(message) {
-        alert(message);
-      }
+function updateTable() {
+    const tableBody = document.querySelector('#recordsTable tbody');
+    tableBody.innerHTML = '';
+    records.forEach((record) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${record.date}</td>
+            <td>${record.machines}</td>
+            <td>${record.opNumber}</td>
+            <td>${record.componentCode}</td>
+            <td>${record.opQuantity}</td>
+            <td>${record.opLength}</td>
+            <td>${record.fabricType}</td>
+            <td>${record.opWeight}</td>
+            <td>${record.numCuts}</td>
+            <td>${record.numTurns}</td>
+            <td>${record.cutAmount}</td>
+            <td>${record.numCycles}</td>
+            <td>${record.remainingTurns}</td>
+            <td>${record.totalCutAmount}</td>
+            <td>${record.carouselSize}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
 
-      function calculateAndSave() {
-        let opNumber = document.getElementById('opNumber').value;
-        let componentCode = document.getElementById('componentCode').value;
-        let opQuantity = parseFloat(document.getElementById('opQuantity').value);
-        let opLength = parseFloat(document.getElementById('opLength').value);
-        let fabricType = document.getElementById('fabricType').value;
-        let opWeight = parseFloat(document.getElementById('opWeight').value);
+function saveTableToLocalStorage() {
+    localStorage.setItem('productionRecords', JSON.stringify(records));
+}
 
-        if (!opNumber || !componentCode || !opQuantity || !opLength || !fabricType || !opWeight) {
-          alert("Por favor, preencha todos os campos.");
-          return;
-        }
+function loadTableFromLocalStorage() {
+    const storedRecords = localStorage.getItem('productionRecords');
+    if (storedRecords) {
+        records = JSON.parse(storedRecords);
+        updateTable();
+    }
+}
 
-        let carouselSize = opLength;
-        let numberOfCuts = Math.ceil(opQuantity / 5);
-        let numberOfTurns = Math.ceil(opQuantity / 10);
-        let numberOfCycles = Math.ceil(opQuantity / 20);
-        let remainingTurns = opQuantity % 10;
-        let remainingCycles = opQuantity % 20;
+function downloadCSV() {
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += "Data,Máquinas Ativas,OP Número,Código do Componente,Quantidade OP,Comprimento OP,Tipo de Tecido,Peso OP,Número de Cortes,Número de Voltas,Quantidade Cortada,Número de Carrosséis,Restante de Voltas,Quantidade Total Cortada,Tamanho do Carrossel\n";
+    records.forEach((record) => {
+        const row = `${record.date},${record.machines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.numCuts},${record.numTurns},${record.cutAmount},${record.numCycles},${record.remainingTurns},${record.totalCutAmount},${record.carouselSize}`;
+        csvContent += row + "\n";
+    });
 
-        document.getElementById('carouselSizeResult').innerText = `Tamanho do carrossel: ${carouselSize} cm`;
-        document.getElementById('cutsResult').innerText = `Número de Cortes na mesa: ${numberOfCuts}`;
-        document.getElementById('turnsResult').innerText = `Número de Voltas Carrossel: ${numberOfTurns}`;
-        document.getElementById('cyclesResult').innerText = `Número de Carrossel: ${numberOfCycles}`;
-        document.getElementById('remainingTurnsResult').innerText = `Restante de Voltas para Fechar a OP: ${remainingTurns}`;
-        document.getElementById('remainingCyclesResult').innerText = `Ciclos Restantes: ${remainingCycles}`;
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'production_records.csv');
+    document.body.appendChild(link);
+    link.click();
+}
 
-        let table = document.getElementById('resultsTable');
-        let row = table.insertRow();
-        row.insertCell(0).innerText = opNumber;
-        row.insertCell(1).innerText = componentCode;
-        row.insertCell(2).innerText = opQuantity;
-        row.insertCell(3).innerText = opLength;
-        row.insertCell(4).innerText = opWeight;
-        row.insertCell(5).innerText = fabricType;
-        row.insertCell(6).innerText = carouselSize;
-        row.insertCell(7).innerText = numberOfCuts;
-        row.insertCell(8).innerText = numberOfTurns;
-        row.insertCell(9).innerText = numberOfCycles;
-        row.insertCell(10).innerText = remainingTurns;
-        row.insertCell(11).innerText = remainingCycles;
-      }
-
-      function downloadCSV() {
-        let table = document.getElementById('resultsTable');
-        let csv = [];
-        for (let i = 0; i < table.rows.length; i++) {
-          let row = table.rows[i];
-          let rowData = [];
-          for (let j = 0; j < row.cells.length; j++) {
-            rowData.push(row.cells[j].innerText);
-          }
-          csv.push(rowData.join(','));
-        }
-        let csvString = csv.join('\n');
-        let blob = new Blob([csvString], { type: 'text/csv' });
-        let downloadLink = document.createElement('a');
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = 'resultados.csv';
-        downloadLink.click();
-      }
     </script>
 </body>
 </html>
