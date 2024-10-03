@@ -321,8 +321,10 @@ h2 {
     </table>
 
   
-
-    <script>
+<!-- INICIO DO SCRIPT -->
+    
+<script>
+    
 let records = [];
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -383,7 +385,7 @@ function calculateAndSave() {
     document.getElementById('cutsResult').textContent = numCutsText;
 
     let numTurns = 0;
-
+    // CALCULO NÚMERO DE VOLTAS
     if (fabricType === 'Plano') {
         numTurns = Math.floor(((120 - opWeight) * 0.73) + 40);
     } else if (fabricType === 'Tubular') {
