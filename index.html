@@ -330,18 +330,16 @@ h2 {
 <!-- INICIO DO SCRIPT -->
     
 <script>
-    
 let records = [];
 
+// Carrega a tabela do localStorage ao carregar a página
 document.addEventListener('DOMContentLoaded', (event) => {
-    // Carrega a tabela do localStorage ao carregar a página
     loadTableFromLocalStorage();
-});
-
+    
     // Adiciona o evento de verificação de OP repetida
     document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
 });
-    
+
 function showPopup(message) {
     alert(message); // Mostra o pop-up com a informação
 }
@@ -374,6 +372,25 @@ function formatOPNumber(input) {
     if (value.length > 7) value = value.substring(0, 7) + '/' + value.substring(7);
     if (value.length > 10) value = value.substring(0, 10) + '.' + value.substring(10);
     input.value = value;
+}
+
+function checkRepeatedOP() {
+    const opNumber = document.getElementById('opNumber').value;
+
+    if (opNumber && isOPRepeated(opNumber)) {
+        if (confirm("Tem certeza que quer repetir a OP?")) {
+            // O usuário confirmou que deseja repetir a OP
+            // Aqui você pode executar uma ação adicional, se necessário
+        } else {
+            // Limpa o campo se o usuário cancelar
+            document.getElementById('opNumber').value = '';
+            alert("Número da OP foi limpo.");
+        }
+    }
+}
+
+function isOPRepeated(opNumber) {
+    return records.some(record => record.opNumber === opNumber);
 }
 
 function calculateAndSave() {
@@ -524,150 +541,7 @@ function downloadCSV() {
     document.body.appendChild(link);
     link.click();
 }
+</script>
 
-let records = [];
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Carrega a tabela do localStorage ao carregar a página
-    loadTableFromLocalStorage();
-    
-    // Adiciona o evento de verificação de OP repetida
-    document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
-});
-
-function showPopup(message) {
-    alert(message); // Mostra o pop-up com a informação
-}
-
-function toggleMachine(machineNumber) {
-    const button = document.getElementById(`machine${machineNumber}`);
-    if (button.classList.contains('inactive')) {
-        button.classList.remove('inactive');
-        button.classList.add('active');
-    } else {
-        button.classList.remove('active');
-        button.classList.add('inactive');
-    }
-}
-
-function getActiveMachinesCount() {
-    let count = 0;
-    const machineButtons = document.getElementsByClassName('machine-btn');
-    for (let button of machineButtons) {
-        if (button.classList.contains('active')) {
-            count++;
-        }
-    }
-    return count;
-}
-
-function formatOPNumber(input) {
-    let value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-    if (value.length > 3) value = value.substring(0, 3) + '.' + value.substring(3);
-    if (value.length > 7) value = value.substring(0, 7) + '/' + value.substring(7);
-    if (value.length > 10) value = value.substring(0, 10);
-    input.value = value;
-}
-
-function calculateAndSave() {
-    const opNumber = document.getElementById('opNumber').value;
-    const componentCode = document.getElementById('componentCode').value;
-    const opQuantity = document.getElementById('opQuantity').value;
-    const opLength = document.getElementById('opLength').value;
-    const fabricType = document.getElementById('fabricType').value;
-    const opWeight = document.getElementById('opWeight').value;
-
-    if (opNumber && componentCode && opQuantity && opLength && fabricType && opWeight) {
-        const newRecord = {
-            date: new Date().toLocaleString(),
-            machines: getActiveMachinesCount(),
-            opNumber,
-            componentCode,
-            opQuantity,
-            opLength,
-            fabricType,
-            opWeight
-        };
-
-        records.push(newRecord);
-        saveToLocalStorage();
-        updateTable();
-    } else {
-        alert("Preencha todos os campos!");
-    }
-}
-
-function saveToLocalStorage() {
-    localStorage.setItem('productionRecords', JSON.stringify(records));
-}
-
-function loadTableFromLocalStorage() {
-    const storedRecords = localStorage.getItem('productionRecords');
-    if (storedRecords) {
-        records = JSON.parse(storedRecords);
-        updateTable();
-    }
-}
-
-function updateTable() {
-    const tbody = document.querySelector('#recordsTable tbody');
-    tbody.innerHTML = '';
-
-    records.forEach(record => {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${record.date}</td>
-            <td>${record.machines}</td>
-            <td>${record.opNumber}</td>
-            <td>${record.componentCode}</td>
-            <td>${record.opQuantity}</td>
-            <td>${record.opLength}</td>
-            <td>${record.fabricType}</td>
-            <td>${record.opWeight}</td>
-        `;
-
-        tbody.appendChild(row);
-    });
-}
-
-function downloadCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Data e Hora,Máquinas Ativas,Número da OP,Código do Componente,Quantidade da OP,Comprimento da OP,Tipo de Tecido,Gramatura da OP\n";
-
-    records.forEach(record => {
-        csvContent += `${record.date},${record.machines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight}\n`;
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'production_records.csv');
-    document.body.appendChild(link);
-    link.click();
-}
-
-
-function checkRepeatedOP() {
-    const opNumber = document.getElementById('opNumber').value;
-
-    if (opNumber && isOPRepeated(opNumber)) {
-        if (confirm("Tem certeza que quer repetir a OP?")) {
-            // O usuário confirmou que deseja repetir a OP
-            // Aqui você pode executar uma ação adicional, se necessário
-        } else {
-            // Limpa o campo se o usuário cancelar
-            document.getElementById('opNumber').value = '';
-        }
-    }
-}
-
-function isOPRepeated(opNumber) {
-    return records.some(record => record.opNumber === opNumber);
-}
-
-// fim da ultima
-
-    </script>
 </body>
 </html>
