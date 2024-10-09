@@ -643,22 +643,7 @@ function downloadCSV() {
     link.click();
 }
 
-function checkRepeatedOP() {
-    const opNumber = document.getElementById('opNumber').value;
 
-    if (opNumber && isOPRepeated(opNumber)) {
-        if (confirm("Tem certeza que quer repetir a OP?")) {
-            // Ação se o usuário confirmar
-        } else {
-            // Limpa o campo se o usuário cancelar
-            document.getElementById('opNumber').value = '';
-        }
-    }
-}
-
-function isOPRepeated(opNumber) {
-    return records.some(record => record.opNumber === opNumber);
-}
 
     </script>
 </body>
