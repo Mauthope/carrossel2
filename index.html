@@ -341,25 +341,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Adiciona o evento de verificação de OP repetida
     document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
 });
-function checkRepeatedOP() {
-    const opNumber = document.getElementById('opNumber').value;
-
-    if (opNumber && isOPRepeated(opNumber)) {
-        if (confirm("Tem certeza que quer repetir a OP?")) {
-            // O usuário confirmou que deseja repetir a OP
-            // Aqui você pode executar uma ação adicional, se necessário
-        } else {
-            // Limpa o campo se o usuário cancelar
-            document.getElementById('opNumber').value = '';
-        }
-    }
-}
-
-function isOPRepeated(opNumber) {
-    return records.some(record => record.opNumber === opNumber);
-}
-
-// fim da ultima
     
 function showPopup(message) {
     alert(message); // Mostra o pop-up com a informação
@@ -667,6 +648,25 @@ function downloadCSV() {
 }
 
 
+function checkRepeatedOP() {
+    const opNumber = document.getElementById('opNumber').value;
+
+    if (opNumber && isOPRepeated(opNumber)) {
+        if (confirm("Tem certeza que quer repetir a OP?")) {
+            // O usuário confirmou que deseja repetir a OP
+            // Aqui você pode executar uma ação adicional, se necessário
+        } else {
+            // Limpa o campo se o usuário cancelar
+            document.getElementById('opNumber').value = '';
+        }
+    }
+}
+
+function isOPRepeated(opNumber) {
+    return records.some(record => record.opNumber === opNumber);
+}
+
+// fim da ultima
 
     </script>
 </body>
