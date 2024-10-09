@@ -520,57 +520,6 @@ function downloadCSV() {
     document.body.appendChild(link);
     link.click();
 }
-   // ALERTA DE OP
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Carrega a tabela do localStorage ao carregar a página
-        loadTableFromLocalStorage();
-        
-        // Adiciona o evento para o campo de Número da OP
-        const opNumberInput = document.getElementById('opNumber');
-        opNumberInput.addEventListener('input', checkOPNumber);
-    });
-
-    function checkOPNumber() {
-        const opNumber = document.getElementById('opNumber').value.trim();
-        const savedOPs = JSON.parse(localStorage.getItem('opNumbers')) || [];
-        
-        // Verifica se o número da OP já existe no localStorage
-        if (savedOPs.includes(opNumber)) {
-            if (confirm('Tem certeza que quer repetir a OP?')) {
-                // Se confirmar, pode continuar
-                console.log('Repetição de OP confirmada');
-            } else {
-                // Se não confirmar, limpa o campo
-                document.getElementById('opNumber').value = '';
-            }
-        }
-    }
-
-    function calculateAndSave() {
-        const opNumber = document.getElementById('opNumber').value.trim();
-        
-        if (!opNumber) {
-            alert('Por favor, preencha o número da OP.');
-            return;
-        }
-
-        // Armazenar o novo número da OP no localStorage
-        let savedOPs = JSON.parse(localStorage.getItem('opNumbers')) || [];
-        if (!savedOPs.includes(opNumber)) {
-            savedOPs.push(opNumber);
-            localStorage.setItem('opNumbers', JSON.stringify(savedOPs));
-        }
-
-        // Exemplo de outras operações que podem ser feitas após o cálculo
-        console.log('Número da OP salvo:', opNumber);
-    }
-
-    function loadTableFromLocalStorage() {
-        // Carregar os números de OP salvos do localStorage (apenas para referência)
-        const savedOPs = JSON.parse(localStorage.getItem('opNumbers')) || [];
-        console.log('Números da OP carregados:', savedOPs);
-    }
-
 
 
     </script>
