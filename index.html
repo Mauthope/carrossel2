@@ -529,9 +529,27 @@ function loadTableFromLocalStorage() {
 function downloadCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
     csvContent += "Data,Máquinas Ativas,OP Número,Código do Componente,Quantidade OP,Comprimento OP,Tipo de Tecido,Peso OP,Número de Cortes,Número de Voltas,Quantidade Cortada,Número de Carrosséis,Restante de Voltas,Quantidade Total Cortada,Tamanho do Carrossel\n";
+    
     records.forEach((record) => {
-        const row = `${record.date},${record.machines},${record.opNumber},${record.componentCode},${record.opQuantity},${record.opLength},${record.fabricType},${record.opWeight},${record.numCuts},${record.numTurns},${record.cutAmount},${record.numCycles},${record.remainingTurns},${record.totalCutAmount},${record.carouselSize}`;
-        csvContent += row + "\n";
+        const row = [
+            record.date,
+            record.machines,
+            record.opNumber,
+            record.componentCode,
+            record.opQuantity,
+            record.opLength,
+            record.fabricType,
+            record.opWeight,
+            record.numCuts,
+            record.numTurns,
+            record.cutAmount,
+            record.numCycles,
+            record.remainingTurns,
+            record.totalCutAmount,
+            record.carouselSize
+        ].join(","); // Converte a linha para string separada por vírgulas
+
+        csvContent += row + "\n"; // Adiciona a linha ao conteúdo CSV
     });
 
     const encodedUri = encodeURI(csvContent);
@@ -541,6 +559,8 @@ function downloadCSV() {
     document.body.appendChild(link);
     link.click();
 }
+
+
 </script>
 
 </body>
