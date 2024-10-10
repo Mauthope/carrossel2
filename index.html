@@ -410,13 +410,10 @@ function checkRepeated() {
     const componentCode = document.getElementById('componentCode').value;
 
     if (opNumber && componentCode && isCombinationRepeated(opNumber, componentCode)) {
-        if (confirm("Tem certeza que quer repetir a combinação de OP e Código de Componente?")) {
-            // O usuário confirmou que deseja repetir a combinação
-        } else {
-            document.getElementById('opNumber').value = ''; // Limpa o campo se o usuário cancelar
-            document.getElementById('componentCode').value = ''; // Limpa o campo se o usuário cancelar
-            alert("Número da OP e Código do Componente foram limpos.");
-        }
+        showPopup("A combinação de Número da OP e Código do Componente já existe. Os campos serão limpos.");
+        // Limpa os campos se a combinação já existir
+        document.getElementById('opNumber').value = ''; 
+        document.getElementById('componentCode').value = ''; 
     }
 }
 
@@ -424,6 +421,9 @@ function checkRepeated() {
 function isCombinationRepeated(opNumber, componentCode) {
     return records.some(record => record.opNumber === opNumber && record.componentCode === componentCode);
 }
+
+
+    
 // Calcula e salva os dados
 function calculateAndSave() {
     const opNumber = document.getElementById('opNumber').value;
