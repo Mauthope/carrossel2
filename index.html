@@ -232,7 +232,7 @@ h2 {
         <button id="machine3" class="machine-btn inactive" onclick="toggleMachine(3)">CL-03</button>
         <button id="machine4" class="machine-btn inactive" onclick="toggleMachine(4)">CL-04</button>
     </div>
-
+<button onclick="submitSelection()">Submit</button>
     <form id="productionForm">
         <div class="input-group">
             <label for="opNumber">Número da OP:</label>
@@ -543,7 +543,35 @@ function downloadCSV() {
     link.click();
 }
 
+function toggleMachine(machineId) {
+            var button = document.getElementById('machine' + machineId);
+            if (button.classList.contains('inactive')) {
+                button.classList.remove('inactive');
+                button.classList.add('active');
+            } else {
+                button.classList.remove('active');
+                button.classList.add('inactive');
+            }
+        }
 
+        function submitSelection() {
+            // Verifica se pelo menos um botão está ativo
+            var buttons = document.querySelectorAll('.machine-btn');
+            var atLeastOneActive = false;
+
+            buttons.forEach(function(button) {
+                if (button.classList.contains('active')) {
+                    atLeastOneActive = true;
+                }
+            });
+
+            if (atLeastOneActive) {
+                alert('Você selecionou pelo menos uma máquina.');
+                // Continue com o processamento ou envio de dados
+            } else {
+                alert('Você deve selecionar pelo menos uma máquina.');
+            }
+        }
 </script>
 
 </body>
