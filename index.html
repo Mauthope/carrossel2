@@ -330,56 +330,69 @@ h2 {
 <!-- INICIO DO SCRIPT -->
     
 <script>
-let records = [];
+        let records = [];
 
-// Carrega a tabela do localStorage ao carregar a página
-document.addEventListener('DOMContentLoaded', (event) => {
-    loadTableFromLocalStorage();
-    
-    // Adiciona o evento de verificação de OP repetida
-    document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
-
-    // Desabilita o formulário inicialmente
-    toggleForm(false);
-});
-
-// Função para mostrar popup
-function showPopup(message) {
-    alert(message); // Mostra o pop-up com a informação
-}
-
-// Função para verificar OP repetida
-function checkRepeatedOP() {
-    const opNumber = document.getElementById('opNumber').value;
-    const componentCode = document.getElementById('componentCode').value;
-    
-    // Verifica se já existe a OP no registro
-    const opExists = records.some(record => record.opNumber === opNumber);
-    
-    if (opExists) {
-        // Se existe, pergunta se o usuário quer continuar
-        const confirmMessage = `A OP ${opNumber} já está inserida. Você deseja continuar?`;
-        if (confirm(confirmMessage)) {
-            // Se o usuário aceitar, verifica se o componentCode também já existe
-            const componentExists = records.some(record => record.opNumber === opNumber && record.componentCode === componentCode);
+        // Carrega a tabela do localStorage ao carregar a página
+        document.addEventListener('DOMContentLoaded', (event) => {
+            loadTableFromLocalStorage();
             
-            if (componentExists) {
-                // Se o componentCode também existe, desabilita o formulário e avisa o usuário
-                showPopup(`A combinação da OP ${opNumber} e ComponentCode ${componentCode} já existe!`);
-                toggleForm(false); // Desabilita o formulário
-            } else {
-                toggleForm(true); // Habilita o formulário
-            }
-        } else {
-            // Se o usuário não quiser continuar, desabilita o formulário
-            toggleForm(false);
-        }
-    } else {
-        // Se a OP não existe, habilita o formulário
-        toggleForm(true);
-    }
-}
+            // Adiciona o evento de verificação de OP repetida
+            document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
+            document.getElementById('componentCode').addEventListener('input', checkRepeatedComponentCode);
 
+            // Desabilita o formulário inicialmente
+            toggleForm(false);
+        });
+
+        // Função para mostrar popup
+        function showPopup(message) {
+            alert(message); // Mostra o pop-up com a informação
+        }
+
+        // Verifica se a OP é repetida
+        function checkRepeatedOP() {
+            const opNumber = document.getElementById('opNumber').value;
+            const isRepeated = records.some(record => record.op === opNumber);
+
+            if (isRepeated) {
+                const confirmed = confirm('A OP inserida já existe. Deseja continuar?');
+
+                if (confirmed) {
+                    // Foca no próximo campo
+                    document.getElementById('componentCode').focus();
+                } else {
+                    // Limpa o campo OP se o usuário não quiser continuar
+                    document.getElementById('opNumber').value = '';
+                }
+            }
+        }
+
+        // Verifica se a combinação OP e Código do Componente já existe
+        function checkRepeatedComponentCode() {
+            const opNumber = document.getElementById('opNumber').value;
+            const componentCode = document.getElementById('componentCode').value;
+
+            const isExisting = records.some(record => record.op === opNumber && record.componentCode === componentCode);
+
+            if (isExisting) {
+                showPopup('A combinação de OP e Código do Componente já existe. Não é possível continuar.');
+                // Limpa o campo Código do Componente
+                document.getElementById('componentCode').value = '';
+            }
+        }
+
+        // Carregar registros do localStorage (implementação fictícia)
+        function loadTableFromLocalStorage() {
+            const storedRecords = localStorage.getItem('records');
+            if (storedRecords) {
+                records = JSON.parse(storedRecords);
+            }
+        }
+
+        // Função para habilitar/desabilitar o formulário
+        function toggleForm(enable) {
+            document.querySelector('form').style.display = enable ? 'block' : 'none';
+        }
 // Função para ativar ou desativar uma máquina
 function toggleMachine(machineNumber) {
     const button = document.getElementById(`machine${machineNumber}`);
