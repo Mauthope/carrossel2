@@ -336,9 +336,9 @@ let records = [];
 document.addEventListener('DOMContentLoaded', (event) => {
     loadTableFromLocalStorage();
     
-   // Adiciona os eventos de verificação de OP e Código de Componente repetidos
-    document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
-    document.getElementById('componentCode').addEventListener('input', checkRepeatedComponentCode);
+    // Adiciona os eventos de verificação de OP e Código de Componente repetidos
+    document.getElementById('opNumber').addEventListener('input', checkRepeated);
+    document.getElementById('componentCode').addEventListener('input', checkRepeated);
 
 
     // Desabilita o formulário inicialmente
