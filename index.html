@@ -402,58 +402,28 @@ function formatOPNumber(input) {
     input.value = value;
 }
 
-// Verifica se a OP é repetida
-function checkRepeatedOP() {
+
+
+// Verifica se a combinação de OP e Código de Componente é repetida
+function checkRepeated() {
     const opNumber = document.getElementById('opNumber').value;
-
-    if (opNumber && isOPRepeated(opNumber)) {
-        if (confirm("Tem certeza que quer repetir a OP?")) {
-            // O usuário confirmou que deseja repetir a OP
-        } else {
-            document.getElementById('opNumber').value = ''; // Limpa o campo se o usuário cancelar
-            alert("Número da OP foi limpo.");
-        }
-    }
-}
-
-// Verifica se a OP é repetida
-function checkRepeatedOP() {
-    const opNumber = document.getElementById('opNumber').value;
-
-    if (opNumber && isOPRepeated(opNumber)) {
-        if (confirm("Tem certeza que quer repetir a OP?")) {
-            // O usuário confirmou que deseja repetir a OP
-        } else {
-            document.getElementById('opNumber').value = ''; // Limpa o campo se o usuário cancelar
-            alert("Número da OP foi limpo.");
-        }
-    }
-}
-
-// Verifica se o Código do Componente é repetido
-function checkRepeatedComponentCode() {
     const componentCode = document.getElementById('componentCode').value;
 
-    if (componentCode && isComponentCodeRepeated(componentCode)) {
-        if (confirm("Tem certeza que quer repetir o Código do Componente?")) {
-            // O usuário confirmou que deseja repetir o Código do Componente
+    if (opNumber && componentCode && isCombinationRepeated(opNumber, componentCode)) {
+        if (confirm("Tem certeza que quer repetir a combinação de OP e Código de Componente?")) {
+            // O usuário confirmou que deseja repetir a combinação
         } else {
+            document.getElementById('opNumber').value = ''; // Limpa o campo se o usuário cancelar
             document.getElementById('componentCode').value = ''; // Limpa o campo se o usuário cancelar
-            alert("Código do Componente foi limpo.");
+            alert("Número da OP e Código do Componente foram limpos.");
         }
     }
 }
 
-// Verifica se o número da OP já foi registrado
-function isOPRepeated(opNumber) {
-    return records.some(record => record.opNumber === opNumber);
+// Verifica se a combinação de OP e Código de Componente já foi registrada
+function isCombinationRepeated(opNumber, componentCode) {
+    return records.some(record => record.opNumber === opNumber && record.componentCode === componentCode);
 }
-
-// Verifica se o Código do Componente já foi registrado
-function isComponentCodeRepeated(componentCode) {
-    return records.some(record => record.componentCode === componentCode);
-}
-
 // Calcula e salva os dados
 function calculateAndSave() {
     const opNumber = document.getElementById('opNumber').value;
