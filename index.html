@@ -352,33 +352,32 @@ function showPopup(message) {
 function checkRepeatedOP() {
     const opNumber = document.getElementById('opNumber').value;
     const componentCode = document.getElementById('componentCode').value;
-
-    // Verifica se a OP já existe
-    const existingRecord = records.find(record => record.opNumber === opNumber);
-
-    if (existingRecord) {
-        // OP já existe, pergunta ao usuário
-        const userConfirmed = confirm(`A OP ${opNumber} já existe. Deseja continuar?`);
-
-        if (userConfirmed) {
-            // Se o usuário confirmou, verifica o componentCode
-            const isComponentCodeRepeated = records.some(record => record.componentCode === componentCode && record.opNumber === opNumber);
-
-            if (isComponentCodeRepeated) {
-                showPopup(`A OP ${opNumber} com o componente ${componentCode} já existe. A inserção será bloqueada.`);
-                // Limpa o campo ou desabilita o botão de submit
-                document.getElementById('opNumber').value = '';
-                document.getElementById('componentCode').value = '';
-                return; // Sai da função
+    
+    // Verifica se já existe a OP no registro
+    const opExists = records.some(record => record.opNumber === opNumber);
+    
+    if (opExists) {
+        // Se existe, pergunta se o usuário quer continuar
+        const confirmMessage = `A OP ${opNumber} já está inserida. Você deseja continuar?`;
+        if (confirm(confirmMessage)) {
+            // Se o usuário aceitar, verifica se o componentCode também já existe
+            const componentExists = records.some(record => record.opNumber === opNumber && record.componentCode === componentCode);
+            
+            if (componentExists) {
+                // Se o componentCode também existe, desabilita o formulário e avisa o usuário
+                showPopup(`A combinação da OP ${opNumber} e ComponentCode ${componentCode} já existe!`);
+                toggleForm(false); // Desabilita o formulário
+            } else {
+                toggleForm(true); // Habilita o formulário
             }
         } else {
-            // Se o usuário não confirmou, limpa o campo
-            document.getElementById('opNumber').value = '';
+            // Se o usuário não quiser continuar, desabilita o formulário
+            toggleForm(false);
         }
+    } else {
+        // Se a OP não existe, habilita o formulário
+        toggleForm(true);
     }
-
-    // Se a OP não existe, habilita o formulário ou permite a continuação
-    toggleForm(true);
 }
 
 // Função para ativar ou desativar uma máquina
