@@ -330,71 +330,26 @@ h2 {
 <!-- INICIO DO SCRIPT -->
     
 <script>
-               let records = [];
+let records = [];
 
-        // Carrega a tabela do localStorage ao carregar a página
-        document.addEventListener('DOMContentLoaded', (event) => {
-            loadTableFromLocalStorage();
-            
-            // Adiciona o evento de verificação de OP repetida
-            document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
-            document.getElementById('componentCode').addEventListener('input', checkRepeatedComponentCode);
-
-            // Desabilita o formulário inicialmente
-            toggleForm(false);
-        });
-
-        // Função para mostrar popup
-        function showPopup(message) {
-            alert(message); // Mostra o pop-up com a informação
-        }
-
-        // Verifica se a OP é repetida
-        function checkRepeatedOP() {
-            const opNumber = document.getElementById('opNumber').value;
-            const isRepeated = records.some(record => record.op === opNumber);
-
-            if (isRepeated) {
-                const confirmed = confirm('A OP inserida já existe. Deseja continuar?');
-
-                if (confirmed) {
-                    // Foca no próximo campo
-                    document.getElementById('componentCode').focus();
-                } else {
-                    // Limpa o campo OP se o usuário não quiser continuar
-                    document.getElementById('opNumber').value = '';
-                }
-            }
-        }
-
-        // Verifica se a combinação OP e Código do Componente já existe
-        function checkRepeatedComponentCode() {
-            const opNumber = document.getElementById('opNumber').value;
-            const componentCode = document.getElementById('componentCode').value;
-
-            // Verifica se há uma combinação existente de OP e Código do Componente
-            const isExisting = records.some(record => record.op === opNumber && record.componentCode === componentCode);
-
-            if (isExisting) {
-                showPopup('A combinação de OP e Código do Componente já existe. Não é possível continuar.');
-                // Limpa o campo Código do Componente
-                document.getElementById('componentCode').value = '';
-            }
-        }
-
-        // Carregar registros do localStorage
-        function loadTableFromLocalStorage() {
-            const storedRecords = localStorage.getItem('records');
-            if (storedRecords) {
-                records = JSON.parse(storedRecords);
-            }
-        }
-
-        // Função para habilitar/desabilitar o formulário
-        function toggleForm(enable) {
-            document.querySelector('form').style.display = enable ? 'block' : 'none';
-        }
+// Carrega a tabela do localStorage ao carregar a página
+document.addEventListener('DOMContentLoaded', (event) => {
+    loadTableFromLocalStorage();
     
+   // Adiciona os eventos de verificação de OP e Código de Componente repetidos
+    document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
+    document.getElementById('componentCode').addEventListener('input', checkRepeatedComponentCode);
+
+
+    // Desabilita o formulário inicialmente
+    toggleForm(false);
+});
+
+// Função para mostrar popup
+function showPopup(message) {
+    alert(message); // Mostra o pop-up com a informação
+}
+
 // Função para ativar ou desativar uma máquina
 function toggleMachine(machineNumber) {
     const button = document.getElementById(`machine${machineNumber}`);
@@ -461,9 +416,42 @@ function checkRepeatedOP() {
     }
 }
 
+// Verifica se a OP é repetida
+function checkRepeatedOP() {
+    const opNumber = document.getElementById('opNumber').value;
+
+    if (opNumber && isOPRepeated(opNumber)) {
+        if (confirm("Tem certeza que quer repetir a OP?")) {
+            // O usuário confirmou que deseja repetir a OP
+        } else {
+            document.getElementById('opNumber').value = ''; // Limpa o campo se o usuário cancelar
+            alert("Número da OP foi limpo.");
+        }
+    }
+}
+
+// Verifica se o Código do Componente é repetido
+function checkRepeatedComponentCode() {
+    const componentCode = document.getElementById('componentCode').value;
+
+    if (componentCode && isComponentCodeRepeated(componentCode)) {
+        if (confirm("Tem certeza que quer repetir o Código do Componente?")) {
+            // O usuário confirmou que deseja repetir o Código do Componente
+        } else {
+            document.getElementById('componentCode').value = ''; // Limpa o campo se o usuário cancelar
+            alert("Código do Componente foi limpo.");
+        }
+    }
+}
+
 // Verifica se o número da OP já foi registrado
 function isOPRepeated(opNumber) {
     return records.some(record => record.opNumber === opNumber);
+}
+
+// Verifica se o Código do Componente já foi registrado
+function isComponentCodeRepeated(componentCode) {
+    return records.some(record => record.componentCode === componentCode);
 }
 
 // Calcula e salva os dados
