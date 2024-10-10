@@ -332,61 +332,15 @@ h2 {
 <script>
 let records = [];
 
-<script>
-document.addEventListener('DOMContentLoaded', (event) => {
-    disableFormFields(); // Desabilita os campos ao carregar a página
-});
-
-function disableFormFields() {
-    const formFields = document.querySelectorAll('#productionForm input, #productionForm select, #productionForm button');
-    formFields.forEach(field => {
-        field.disabled = true;
-    });
-}
-
-function enableFormFields() {
-    const formFields = document.querySelectorAll('#productionForm input, #productionForm select, #productionForm button');
-    formFields.forEach(field => {
-        field.disabled = false;
-    });
-}
-
-function toggleMachine(machineNumber) {
-    const button = document.getElementById(`machine${machineNumber}`);
-    if (button.classList.contains('inactive')) {
-        button.classList.remove('inactive');
-        button.classList.add('active');
-    } else {
-        button.classList.remove('active');
-        button.classList.add('inactive');
-    }
-    
-    if (getActiveMachinesCount() > 0) {
-        enableFormFields(); // Habilita os campos se pelo menos uma máquina estiver ativa
-    } else {
-        disableFormFields(); // Desabilita os campos se nenhuma máquina estiver ativa
-    }
-}
-
-function getActiveMachinesCount() {
-    let count = 0;
-    const machineButtons = document.getElementsByClassName('machine-btn');
-    for (let button of machineButtons) {
-        if (button.classList.contains('active')) {
-            count++;
-        }
-    }
-    return count;
-}
-</script>
-    
-//----------------
 // Carrega a tabela do localStorage ao carregar a página
 document.addEventListener('DOMContentLoaded', (event) => {
     loadTableFromLocalStorage();
     
     // Adiciona o evento de verificação de OP repetida
     document.getElementById('opNumber').addEventListener('input', checkRepeatedOP);
+
+    // Desabilita o formulário inicialmente
+    toggleForm(false);
 });
 
 function showPopup(message) {
@@ -402,6 +356,9 @@ function toggleMachine(machineNumber) {
         button.classList.remove('active');
         button.classList.add('inactive');
     }
+
+    // Verifica se há pelo menos uma máquina ativa para habilitar o formulário
+    checkMachinesAndToggleForm();
 }
 
 function getActiveMachinesCount() {
@@ -413,6 +370,19 @@ function getActiveMachinesCount() {
         }
     }
     return count;
+}
+
+// Função que habilita ou desabilita o formulário com base na quantidade de máquinas ativas
+function checkMachinesAndToggleForm() {
+    const activeMachinesCount = getActiveMachinesCount();
+    toggleForm(activeMachinesCount > 0); // Habilita o formulário se houver ao menos uma máquina ativa
+}
+
+function toggleForm(enable) {
+    const formElements = document.querySelectorAll('input, select, button');
+    formElements.forEach(element => {
+        element.disabled = !enable;
+    });
 }
 
 function formatOPNumber(input) {
@@ -581,17 +551,16 @@ function downloadCSV() {
     
     records.forEach((record) => {
         const row = `"${record.date}","${record.machines}","${record.opNumber}","${record.componentCode}","${record.opQuantity}","${record.opLength}","${record.fabricType}","${record.opWeight}","${record.numCuts}","${record.numTurns}","${record.cutAmount}","${record.numCycles}","${record.remainingTurns}","${record.totalCutAmount}","${record.carouselSize}"`;
-        csvContent += row + "\n";
+        csvContent += row + "\r\n";
     });
 
     const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'production_records.csv');
-    document.body.appendChild(link);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "production_records.csv");
+    document.body.appendChild(link); // Requerido para Firefox
     link.click();
 }
-
 
 </script>
 
