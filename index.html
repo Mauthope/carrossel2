@@ -332,6 +332,55 @@ h2 {
 <script>
 let records = [];
 
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    disableFormFields(); // Desabilita os campos ao carregar a página
+});
+
+function disableFormFields() {
+    const formFields = document.querySelectorAll('#productionForm input, #productionForm select, #productionForm button');
+    formFields.forEach(field => {
+        field.disabled = true;
+    });
+}
+
+function enableFormFields() {
+    const formFields = document.querySelectorAll('#productionForm input, #productionForm select, #productionForm button');
+    formFields.forEach(field => {
+        field.disabled = false;
+    });
+}
+
+function toggleMachine(machineNumber) {
+    const button = document.getElementById(`machine${machineNumber}`);
+    if (button.classList.contains('inactive')) {
+        button.classList.remove('inactive');
+        button.classList.add('active');
+    } else {
+        button.classList.remove('active');
+        button.classList.add('inactive');
+    }
+    
+    if (getActiveMachinesCount() > 0) {
+        enableFormFields(); // Habilita os campos se pelo menos uma máquina estiver ativa
+    } else {
+        disableFormFields(); // Desabilita os campos se nenhuma máquina estiver ativa
+    }
+}
+
+function getActiveMachinesCount() {
+    let count = 0;
+    const machineButtons = document.getElementsByClassName('machine-btn');
+    for (let button of machineButtons) {
+        if (button.classList.contains('active')) {
+            count++;
+        }
+    }
+    return count;
+}
+</script>
+    
+//----------------
 // Carrega a tabela do localStorage ao carregar a página
 document.addEventListener('DOMContentLoaded', (event) => {
     loadTableFromLocalStorage();
