@@ -454,8 +454,12 @@ function resetInputFields() {
     document.getElementById('fabricType').disabled = true;
     document.getElementById('opWeight').disabled = true;
 
-// Reseta a seleção da máquina e muda o estado do botão
-    const machineSelect = document.getElementById('machineSelect');
+    // Resetar os botões das máquinas para o estado inicial (inativo)
+    const machineButtons = document.getElementsByClassName('machine-btn');
+    for (let button of machineButtons) {
+        button.classList.remove('active');
+        button.classList.add('inactive');
+    }
 
 }
 
