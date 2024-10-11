@@ -449,6 +449,8 @@ function calculateAndSave() {
     if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
         alert('Por favor, preencha todos os campos corretamente.');
         return;
+
+          clearForm();
     }
 
     const maxCarouselLength = 540 / opLength;
@@ -559,7 +561,10 @@ function updateTable() {
         tableBody.appendChild(row);
     });
 }
-
+// Função para limpar o formulário (NOVO CÓDIGO)
+function clearForm() {
+    document.getElementById('productionForm').reset();
+}
 // Salva a tabela no localStorage
 function saveTableToLocalStorage() {
     localStorage.setItem('productionRecords', JSON.stringify(records));
