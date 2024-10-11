@@ -454,8 +454,10 @@ function resetInputFields() {
     document.getElementById('fabricType').disabled = true;
     document.getElementById('opWeight').disabled = true;
 
-     // Reseta o botão de seleção da máquina
-    document.getElementById('machine-buttons').selectedIndex = 0; // Define para a opção padrão
+    // Reseta a seleção da máquina e altera a cor do botão de volta para verde
+    const machineSelect = document.getElementById('machineSelect');
+    machineSelect.selectedIndex = 0; // Volta ao primeiro item da lista (assumindo que o primeiro é "Selecione")
+    machineSelect.style.backgroundColor = 'green'; // Altera a cor de volta para verde
 }
 
     
