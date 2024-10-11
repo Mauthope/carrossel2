@@ -520,14 +520,8 @@ function calculateAndSave() {
     updateTable();
     saveTableToLocalStorage();
 
-    // Limpa os campos após salvar
-    document.getElementById('opNumber').value = '';
-    document.getElementById('componentCode').value = '';
-    document.getElementById('opQuantity').value = '';
-    document.getElementById('opLength').value = '';
-    document.getElementById('fabricType').value = '';
-    document.getElementById('opWeight').value = '';
-
+// Limpa todos os campos e recarrega a página
+    location.reload();
 
 
 }
