@@ -570,7 +570,7 @@ function getActiveMachines() {
 function updateTable() {
     const tableBody = document.querySelector('#recordsTable tbody');
     tableBody.innerHTML = '';
-    records.forEach((record) => {
+    records.slice().reverse().forEach((record) => {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${record.date}</td>
