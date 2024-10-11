@@ -449,7 +449,6 @@ function calculateAndSave() {
     if (!opNumber || !componentCode || isNaN(opQuantity) || isNaN(opLength) || !fabricType || isNaN(opWeight)) {
         alert('Por favor, preencha todos os campos corretamente.');
         return;
-
     }
 
     const maxCarouselLength = 540 / opLength;
@@ -520,7 +519,6 @@ function calculateAndSave() {
     records.push(record);
     updateTable();
     saveTableToLocalStorage();
-    clearForm();  // Limpa os campos após salvar
 }
 
 // Obtém as máquinas ativas
@@ -594,16 +592,7 @@ function downloadCSV() {
     link.click();
 }
 
-// Função para limpar os campos do formulário
-function clearForm() {
-    document.getElementById('productionForm').reset();  // Limpa todos os campos de entrada
-    // Opcional: Você pode resetar também os resultados se necessário
-    document.getElementById('cutsResult').innerText = 'Número de Cortes na mesa: ';
-    document.getElementById('turnsResult').innerText = 'Número de Voltas Carrossel: ';
-    document.getElementById('cyclesResult').innerText = 'Número de Carrossel: ';
-    document.getElementById('remainingTurnsResult').innerText = 'Restante de Voltas para Fechar a OP: ';
-    document.getElementById('totalCutAmountResult').innerText = 'Quantidade Total Cortada: ';
-}
+
 
 </script>
 
