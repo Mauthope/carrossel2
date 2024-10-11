@@ -400,7 +400,7 @@ function checkMachinesAndToggleForm() {
 function toggleForm(enable) {
     const formElements = document.querySelectorAll('input, select, button');
     formElements.forEach(element => {
-        if (element.id !== 'machine1' && element.id !== 'machine2' && element.id !== 'machine3') {
+        if (element.id !== 'machine1' && element.id !== 'machine2' && element.id !== 'machine3' && element.id !== 'machine4') {
             element.disabled = !enable; // Habilita ou desabilita o formulário
         }
     });
