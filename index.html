@@ -519,6 +519,24 @@ function calculateAndSave() {
     records.push(record);
     updateTable();
     saveTableToLocalStorage();
+
+    // Limpa os campos após salvar
+    document.getElementById('opNumber').value = '';
+    document.getElementById('componentCode').value = '';
+    document.getElementById('opQuantity').value = '';
+    document.getElementById('opLength').value = '';
+    document.getElementById('fabricType').value = '';
+    document.getElementById('opWeight').value = '';
+
+    // Limpa os resultados exibidos
+    document.getElementById('cutsResult').textContent = '';
+    document.getElementById('turnsResult').textContent = '';
+    document.getElementById('cutAmountResult').textContent = '';
+    document.getElementById('cyclesResult').textContent = '';
+    document.getElementById('remainingTurnsResult').textContent = '';
+    document.getElementById('totalCutAmountResult').textContent = '';
+    document.getElementById('carouselSizeResult').innerText = '';
+
 }
 
 // Obtém as máquinas ativas
