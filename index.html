@@ -520,6 +520,17 @@ function calculateAndSave() {
     updateTable();
     saveTableToLocalStorage();
 
+
+    // Função para limpar os campos e resultados sem recarregar a página
+function resetPage() {
+    // Limpa os campos de entrada
+    document.getElementById('opNumber').value = '';
+    document.getElementById('componentCode').value = '';
+    document.getElementById('opQuantity').value = '';
+    document.getElementById('opLength').value = '';
+    document.getElementById('fabricType').value = '';
+    document.getElementById('opWeight').value = '';
+
     // Limpa todos os campos e resultados, mas mantém a página sem recarregar
     resetPage();
 
