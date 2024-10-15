@@ -272,6 +272,7 @@ h2 {
                 <option value="Tubular">Tubular</option>
                 <option value="PATCH">PATCH</option>
                 <option value="Saia">Saia</option>
+                <option value="HB">Saia</option>
             </select>
         </div>
         <div class="input-group">
@@ -492,7 +493,9 @@ function calculateAndSave() {
     } else if (fabricType === 'PATCH') {
         numTurns = 25;
     } else if (fabricType === 'Saia') {
-        numTurns = Math.floor(((120 - opWeight) * 0.55) + 40)
+        numTurns = Math.floor(((120 - opWeight) * 0.55) + 40);
+    } else if (fabricType === 'HB') {
+        numTurns = Math.floor(((82 - opWeight) * 0.43) + 40)
     }
 
     const totalCuts = numTurns * numCuts;
