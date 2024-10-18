@@ -273,6 +273,7 @@ h2 {
                 <option value="PATCH">PATCH</option>
                 <option value="Saia">Saia</option>
                 <option value="HB">HB</option>
+                <option value="Liner">Liner</option>
             </select>
         </div>
         <div class="input-group">
@@ -495,7 +496,9 @@ function calculateAndSave() {
     } else if (fabricType === 'Saia') {
         numTurns = Math.floor(((120 - opWeight) * 0.55) + 40);
     } else if (fabricType === 'HB') {
-        numTurns = Math.floor(((82 - opWeight) * 0.42) + 40)
+        numTurns = Math.floor(((82 - opWeight) * 0.42) + 40);
+    } else if (fabricType === 'Liner') {
+        numTurns = Math.floor(((210 - opWeight) * 0.21) + 17)
     }
 
     const totalCuts = numTurns * numCuts;
